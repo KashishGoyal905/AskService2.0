@@ -8,17 +8,17 @@ export default function JobApply() {
                 <hr />
             </div>
             <div className="max-w-4xl mx-auto py-10">
-                <Form method="post" className="space-y-8">
+                <Form method="post" action='/apply' className="space-y-8">
                     <div className="bg-white shadow-md rounded-lg p-8">
                         <h2 className="text-2xl font-bold mb-4 text-center">Personal Information</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Full name</label>
-                                <input type="text" name="first-name" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <input type="text" name="fullname" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-                                <input type="number" name="mobile-number" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <input type="number" name="mobilenumber" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Email address</label>
@@ -28,17 +28,17 @@ export default function JobApply() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Applying for</label>
                                 <select name="jobRole" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option>House Maid</option>
-                                    <option>Cook</option>
-                                    <option>Cleaner</option>
-                                    <option>Baby Caretaker</option>
-                                    <option>Driver</option>
-                                    <option>Personal Worker</option>
+                                    <option>maid</option>
+                                    <option>cook</option>
+                                    <option>cleaner</option>
+                                    <option>babycaretaker</option>
+                                    <option>driver</option>
+                                    <option>perosnalworker</option>
                                 </select>
                             </div>
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium text-gray-700">Street address</label>
-                                <input type="text" name="street-address" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <input type="text" name="address" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">City</label>
@@ -50,7 +50,7 @@ export default function JobApply() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-                                <input type="text" name="postal-code" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <input type="text" name="postalcode" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                         </div>
                     </div>
