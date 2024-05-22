@@ -13,10 +13,8 @@ const jobSchema = new Schema({
     state: { type: String, },
     postalcode: { type: Number },
     about: { type: String, },
-    avatar: {
-        type: String,
-    },
-    isHired: { type: Boolean, required: true, default: false },
+    avatar: { type: String },
+    isHired: { type: Boolean, default: false },
 
 }, { timestamps: true }); // to add createdAt and updatedAt
 

@@ -1,9 +1,12 @@
 const express = require("express"); //requiring
 const app = express(); // initializing the instance of express application
-
+const path = require("path");
 const db = require('./config/mongoose');
 
 app.use(express.urlencoded({ extended: true })); // helps to parse the data
+
+// Static route for serving uploaded images
+app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
 
 app.use(express.json()); // parse the data coming from the frontend fecth
 app.use((req, res, next) => {
