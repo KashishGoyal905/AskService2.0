@@ -7,7 +7,7 @@ const Job = require('../models/job_schema');
 // multer file upload
 const fileUpload = require('../middleware/file-upload');
 
-// route for the home page
+// route for the specific jobs
 router.get('/hire/:role', async function (req, res) {
     const role = req.params.role;    // taking the value of role from params
     // console.log(role);
@@ -19,9 +19,7 @@ router.get('/hire/:role', async function (req, res) {
 
 router.post('/applyjob', fileUpload.single('avatar'), async function (req, res) {
     const { fullname, mobilenumber, email, jobRole, address, city, state, postalcode, about } = req.body;
-    console.log('File:', req.file);
-    console.log('Body:', req.body);
-    console.log('-----');
+    // console.log('File:', req.file);
     const jobApplication = new Job({
         fullname,
         mobilenumber,

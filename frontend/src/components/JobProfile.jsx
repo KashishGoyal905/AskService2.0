@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 export default function JobProfile() {
     const [jobs, setJobs] = useState();
-
+    // to get hold of the url
     const params = useParams();
     useEffect(() => {
         async function fetchEvents() {
@@ -31,7 +31,7 @@ export default function JobProfile() {
                                 <h2>{job.city}, {job.state}</h2>
                                 <p>{job.about}</p>
                                 <div className="card-actions justify-end">
-                                    <Link to='maid' ><button className="btn btn-primary">View Profiles</button></Link>
+                                    <Link to='/' ><button className="btn btn-primary">Hire!</button></Link>
                                 </div>
                             </div>
                         </div>)

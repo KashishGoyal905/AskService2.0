@@ -1,5 +1,4 @@
 // actions.js
-
 import { redirect } from "react-router-dom";
 
 export async function applyJobAction({ request, navigate }) {
@@ -14,7 +13,6 @@ export async function applyJobAction({ request, navigate }) {
     //     state: formData.get('state'),
     //     postalcode: formData.get('postalcode'),
     //     about: formData.get('about'),
-    //     avatar: formData.get('avatar'),
     //     // Add other form fields as needed
     // };
     // console.log('Job Application:', jobApplication);

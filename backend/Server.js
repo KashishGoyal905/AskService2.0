@@ -5,9 +5,11 @@ const db = require('./config/mongoose');
 
 app.use(express.urlencoded({ extended: true })); // helps to parse the data
 
-// Static route for serving uploaded images
+
+// Static route for serving uploaded images (multer)
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
 
+// CORS
 app.use(express.json()); // parse the data coming from the frontend fecth
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
