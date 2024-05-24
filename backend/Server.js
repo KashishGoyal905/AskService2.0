@@ -19,7 +19,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// app.use('/user', require('./routes/users'));
 app.use('/', require('./routes'));  // routes
+
 
 //listening to the server
 app.listen(8080, function (req, res, err) {

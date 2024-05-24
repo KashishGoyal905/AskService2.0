@@ -8,7 +8,7 @@ import JobApply from './components/JobApply';
 import About from './components/About';
 import Login from './components/Login';
 import Singup from './components/Singup';
-import { applyJobAction } from './components/actions';
+import { applyJobAction, loginAction, signUpAction } from './components/actions';
 
 const router = createBrowserRouter([
   {
@@ -21,8 +21,8 @@ const router = createBrowserRouter([
       { path: 'about', element: <About />, },
     ]
   },
-  { path: '/login', element: <Login /> },
-  { path: '/signup', element: <Singup />, },
+  { path: '/login', element: <Login />, action: loginAction },
+  { path: '/signup', element: <Singup />, action: signUpAction },
 ]);
 
 function App() {
