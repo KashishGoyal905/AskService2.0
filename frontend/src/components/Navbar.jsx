@@ -12,7 +12,7 @@ export default function Navbar() {
                         <li><Link to="/hire" className="mr-2 hover:bg-primary hover:text-primary-content">Hire</Link></li>
                         <li><Link to="/apply" className="mr-2 hover:bg-primary hover:text-primary-content">Apply For Job</Link></li>
                         <li><Link to="/about" className="mr-2 hover:bg-primary hover:text-primary-content">About</Link></li>
-                        <li><Link to="/login" className="mr-2 hover:bg-primary hover:text-primary-content">Login</Link></li>
+                        <li><Link to="/user/login" className="mr-2 hover:bg-primary hover:text-primary-content">Login</Link></li>
                     </ul>
                 </div>
             </div>
