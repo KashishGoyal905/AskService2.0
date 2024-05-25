@@ -106,6 +106,9 @@ export async function loginAction({ request }) {
         throw new Error('Failed to login');
     }
 
+    const resData = await response.json();
+    console.log(resData.message);
+
     // Redirect or handle success
     return redirect(`/`); // or { redirect: '/some-path' }
 }

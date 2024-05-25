@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
 
 export default function Login() {
     return (
@@ -23,7 +23,7 @@ export default function Login() {
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                        <form className="space-y-6">
+                        <Form className="space-y-6" method='post' action='/login'>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                     Email address
@@ -33,7 +33,6 @@ export default function Login() {
                                         id="email"
                                         name="email"
                                         type="email"
-                                        autoComplete="email"
                                         required
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
@@ -49,7 +48,6 @@ export default function Login() {
                                         id="password"
                                         name="password"
                                         type="password"
-                                        autoComplete="current-password"
                                         required
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
@@ -70,7 +68,7 @@ export default function Login() {
                                 </div>
 
                                 <div className="text-sm">
-                                    <Link to="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                    <Link to="/" className="font-medium text-indigo-600 hover:text-indigo-500">
                                         Forgot your password?
                                     </Link>
                                 </div>
@@ -123,7 +121,7 @@ export default function Login() {
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </Form>
                     </div>
                 </div>
             </div>
