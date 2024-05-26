@@ -78,8 +78,13 @@ export async function signUpAction({ request }) {
     // });
 
     if (!response.ok) {
-        throw new Error('Failed to submit job application');
+        console.log('Failed to SignUp');
+        throw new Error('Failed to SignUp');
     }
+
+    const data = await response.json();
+    localStorage.setItem('token', data.token);
+
 
     // Redirect or handle success
     return redirect(`/login`); // or { redirect: '/some-path' }
@@ -103,11 +108,13 @@ export async function loginAction({ request }) {
     });
 
     if (!response.ok) {
+        console.log('Failed to login');
         throw new Error('Failed to login');
     }
 
-    const resData = await response.json();
-    console.log(resData.message);
+    const data = await response.json();
+    localStorage.setItem('token', data.token);
+    console.log(data.message);
 
     // Redirect or handle success
     return redirect(`/`); // or { redirect: '/some-path' }

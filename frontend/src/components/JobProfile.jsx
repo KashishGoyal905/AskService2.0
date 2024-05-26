@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import authContext from '../context/AuthContext'
+
 export default function JobProfile() {
+    const { isAuthenticated } = useContext(authContext);
+
+
     const [jobs, setJobs] = useState();
+
     // to get hold of the url
     const params = useParams();
     useEffect(() => {
@@ -12,7 +19,6 @@ export default function JobProfile() {
         }
         fetchEvents();
     }, [params.jobProfile]);
-
 
     return (
         <>
@@ -31,7 +37,7 @@ export default function JobProfile() {
                                 <h2>{job.city}, {job.state}</h2>
                                 <p>{job.about}</p>
                                 <div className="card-actions justify-end">
-                                    <Link to='/' ><button className="btn btn-primary">Hire!</button></Link>
+                                    <button className="btn btn-primary" disabled={!isAuthenticated}>Hire!</button>
                                 </div>
                             </div>
                         </div>)

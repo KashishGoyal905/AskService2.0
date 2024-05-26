@@ -1,6 +1,9 @@
-import { Form } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
+import { useContext } from "react";
+import authContext from '../context/AuthContext';
 
 export default function JobApply() {
+    const { isAuthenticated } = useContext(authContext);
     return (
         <>
             <div className='mt-5'>
@@ -64,7 +67,9 @@ export default function JobApply() {
                         </div>
                     </div>
                     <div className="mt-6 flex justify-end">
-                        <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create</button>
+                        {isAuthenticated
+                            ? <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create</button>
+                            : <Link to='/login' className="btn btn-primary">Login to create</Link>}
                     </div>
                 </Form>
             </div>
