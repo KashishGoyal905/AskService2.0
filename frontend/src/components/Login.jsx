@@ -1,6 +1,43 @@
-import { Form, Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Form, Link, useNavigate } from "react-router-dom";
+import authContext from "../context/AuthContext";
 
 export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const { login } = useContext(authContext);
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const user = {
+            email: email,
+            password: password,
+        };
+        console.log('user Application:', user);
+
+        // Example of sending data to the backend
+        const response = await fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            console.log('Failed to login');
+            throw new Error('Failed to login');
+        }
+
+        const data = await response.json();
+        login(data.token);
+        console.log(data.message);
+
+        // Redirect or handle success
+        return navigate(`/`);
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 flex">
             <div className="flex flex-col justify-center py-12 px-6 lg:px-8 w-full max-w-md mx-auto">
@@ -23,7 +60,7 @@ export default function Login() {
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                        <Form className="space-y-6" method='post' action='/login'>
+                        <Form className="space-y-6" method='post' onSubmit={handleLogin}>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                     Email address
@@ -34,6 +71,7 @@ export default function Login() {
                                         name="email"
                                         type="email"
                                         required
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
                                 </div>
@@ -49,6 +87,7 @@ export default function Login() {
                                         name="password"
                                         type="password"
                                         required
+                                        onChange={(e) => setPassword(e.target.value)}
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
                                 </div>

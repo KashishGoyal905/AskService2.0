@@ -9,6 +9,7 @@ import About from './components/About';
 import Login from './components/Login';
 import Singup from './components/Singup';
 import { applyJobAction, loginAction, signUpAction } from './components/actions';
+import { AuthContextProvider } from './context/AuthContext';
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   );
 }
 
