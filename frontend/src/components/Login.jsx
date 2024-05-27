@@ -31,11 +31,11 @@ export default function Login() {
         }
 
         const data = await response.json();
-        login(data.token);
+        login(data.token, data.user);
         console.log(data.message);
 
         // Redirect or handle success
-        return navigate(`/`);
+        return navigate(`/profile/${data.user._id}`);
     }
 
     return (
