@@ -3,7 +3,8 @@ import { useContext } from "react";
 import authContext from '../context/AuthContext'
 
 export default function Navbar() {
-    const { isAuthenticated, logout, user } = useContext(authContext);
+    const { isAuthenticated, logout } = useContext(authContext);
+    const user = JSON.parse(localStorage.getItem('user'));
 
     return (
         <div className="sticky top-0 z-20">

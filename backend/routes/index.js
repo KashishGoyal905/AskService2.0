@@ -101,6 +101,35 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// update profile
+router.post('/profile/:id', fileUpload.single('image'), async function (req, res) {
+    const user = await User.findById(req.params.id);
+    console.log(req.body);
+    console.log(req.file);
+    const { name, email } = req.body;
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user information
+    user.name = name;
+    user.email = email;
+
+    if (req.file) {
+        user.image = req.file.filename; // Save the path to the uploaded image
+    }
+
+    console.log(user);
+
+    try {
+        const savedUser = await user.save();
+        res.status(201).json({ user: savedUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to save job application', error });
+    }
+
+});
+
 // its position matters
 // it will act as authentication
 // all the routes below this could only be accessed if authenticated  
