@@ -35,7 +35,7 @@ export default function Login() {
         console.log(data.message);
 
         // Redirect or handle success
-        return navigate(`/profile/${data.user._id}`);
+        return navigate(`/`);
     }
 
     return (

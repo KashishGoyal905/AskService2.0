@@ -2,7 +2,6 @@ import { createContext, useEffect, useState } from "react";
 
 const authContext = createContext({
     isAuthenticated: '',
-    userId: '',
     login: () => { },
     logout: () => { },
 });
@@ -10,8 +9,6 @@ const authContext = createContext({
 // export function authContextProvider({ children }) {
 export const AuthContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState(null);
-
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -31,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
             }
         };
 
-        const intervalId = setInterval(checkTokenExpiration, 10000); // Check every 10 second
+        const intervalId = setInterval(checkTokenExpiration, 1000); // Check every second
 
         return () => clearInterval(intervalId);
     }, []);
@@ -40,19 +37,19 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.setItem('token', token);
         const tokenExpirationTime = new Date().getTime() + 60 * 60 * 1000; // 1hr  from now
         localStorage.setItem('tokenExpirationTime', tokenExpirationTime);
-        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpirationTime');
-        setUser(null);
+        localStorage.removeItem('user');
         setIsAuthenticated(false);
     };
 
     return (
-        <authContext.Provider value={{ isAuthenticated, login, logout, user }}>
+        <authContext.Provider value={{ isAuthenticated, login, logout }}>
             {children}
         </authContext.Provider>
     );
