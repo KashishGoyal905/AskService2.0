@@ -8,8 +8,9 @@ import JobApply from './components/JobApply';
 import About from './components/About';
 import Login from './components/Login';
 import Singup from './components/Singup';
-import { applyJobAction, loginAction, signUpAction } from './components/actions';
+import { applyJobAction, signUpAction } from './components/actions';
 import { AuthContextProvider } from './context/AuthContext';
+import Profile from './components/Profile';
 
 const router = createBrowserRouter([
   {
@@ -20,9 +21,10 @@ const router = createBrowserRouter([
       { path: 'hire/:jobProfile', element: <JobProfile />, },
       { path: 'apply', element: <JobApply />, action: applyJobAction },
       { path: 'about', element: <About />, },
+      { path: '/profile/:userId', element: <Profile /> },
     ]
   },
-  { path: '/login', element: <Login />, action: loginAction },
+  { path: '/login', element: <Login /> },
   { path: '/signup', element: <Singup />, action: signUpAction },
 ]);
 
