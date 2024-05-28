@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 const authContext = createContext({
     isAuthenticated: '',
     login: () => { },
+    update: () => { },
     logout: () => { },
 });
 
@@ -33,11 +34,10 @@ export const AuthContextProvider = ({ children }) => {
         return () => clearInterval(intervalId);
     }, []);
 
-    const login = (token, user) => {
+    const login = (token) => {
         localStorage.setItem('token', token);
         const tokenExpirationTime = new Date().getTime() + 60 * 60 * 1000; // 1hr  from now
         localStorage.setItem('tokenExpirationTime', tokenExpirationTime);
-        localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
     };
 
@@ -48,8 +48,14 @@ export const AuthContextProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const updateFun = (user) => {
+        localStorage.removeItem('user');
+        localStorage.setItem('user', JSON.stringify(user));
+        setIsAuthenticated(true);
+    }
+
     return (
-        <authContext.Provider value={{ isAuthenticated, login, logout }}>
+        <authContext.Provider value={{ isAuthenticated, login, logout, updateFun }}>
             {children}
         </authContext.Provider>
     );

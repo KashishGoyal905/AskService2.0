@@ -82,10 +82,6 @@ export async function signUpAction({ request }) {
         throw new Error('Failed to SignUp');
     }
 
-    const data = await response.json();
-    localStorage.setItem('token', data.token);
-
-
     // Redirect or handle success
     return redirect(`/login`); // or { redirect: '/some-path' }
 }

@@ -50,12 +50,12 @@ router.post('/register', async function (req, res) {
             console.log(user);
             const savedUser = await user.save();
 
-            let token;
-            token = jwt.sign(
-                { userId: savedUser._id, email: savedUser.email }, 'tokenSecret', { expiresIn: '1h' }
-            );
+            // let token;
+            // token = jwt.sign(
+            //     { userId: savedUser._id, email: savedUser.email }, 'tokenSecret', { expiresIn: '1h' }
+            // );
 
-            console.log('Token1: ', token);
+            // console.log('Token1: ', token);
 
             res.status(201).json({ message: 'User created successfully', user: savedUser, token: token });
         } else {
