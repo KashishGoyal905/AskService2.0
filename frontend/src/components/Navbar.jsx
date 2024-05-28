@@ -17,7 +17,14 @@ export default function Navbar() {
                         <li><Link to="/hire" className="mr-2 hover:bg-primary hover:text-primary-content">Hire</Link></li>
                         <li><Link to="/apply" className="mr-2 hover:bg-primary hover:text-primary-content">Apply For Job</Link></li>
                         <li><Link to="/about" className="mr-2 hover:bg-primary hover:text-primary-content">About</Link></li>
-                        {isAuthenticated && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">{user.name}</Link></li>}
+                        {isAuthenticated && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">
+                            <div className="avatar online">
+                                <div className="w-8 rounded-full">
+                                    {user.image ? <img src={`http://localhost:8080/uploads/images/${user.image}`} alt={user.name} /> :
+                                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt='Profile' />}
+                                </div>
+                            </div>
+                        </Link></li>}
                         {isAuthenticated
                             ? <li><button onClick={() => logout()} className="mr-2 hover:bg-primary hover:text-primary-content">Logout</button></li>
                             : <li><Link to="/login" className="mr-2 hover:bg-primary hover:text-primary-content">Login</Link></li>}
