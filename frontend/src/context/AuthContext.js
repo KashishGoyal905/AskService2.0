@@ -3,18 +3,30 @@ import { createContext, useEffect, useState } from "react";
 const authContext = createContext({
     isAuthenticated: '',
     login: () => { },
+    user: null,
     update: () => { },
     logout: () => { },
 });
 
 // export function authContextProvider({ children }) {
 export const AuthContextProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        const token = localStorage.getItem('token');
+        return !!token;
+    });
+
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
+        const storedUser = localStorage.getItem('user');
+
+        if (token && storedUser) {
             setIsAuthenticated(true);
+            setUser(JSON.parse(storedUser));
         }
 
         const tokenExpirationTime = localStorage.getItem('tokenExpirationTime');
@@ -34,11 +46,13 @@ export const AuthContextProvider = ({ children }) => {
         return () => clearInterval(intervalId);
     }, []);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
+    const login = (token, user) => {
         const tokenExpirationTime = new Date().getTime() + 60 * 60 * 1000; // 1hr  from now
+        localStorage.setItem('token', token);
         localStorage.setItem('tokenExpirationTime', tokenExpirationTime);
+        localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
+        setUser(user);
     };
 
     const logout = () => {
@@ -46,16 +60,16 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.removeItem('tokenExpirationTime');
         localStorage.removeItem('user');
         setIsAuthenticated(false);
+        setUser(null);
     };
 
-    const updateFun = (user) => {
-        localStorage.removeItem('user');
-        localStorage.setItem('user', JSON.stringify(user));
-        setIsAuthenticated(true);
+    const updateFun = (updatedUser) => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
     }
 
     return (
-        <authContext.Provider value={{ isAuthenticated, login, logout, updateFun }}>
+        <authContext.Provider value={{ isAuthenticated, login, logout, updateFun, user }}>
             {children}
         </authContext.Provider>
     );

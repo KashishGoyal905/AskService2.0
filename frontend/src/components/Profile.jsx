@@ -3,8 +3,8 @@ import authContext from "../context/AuthContext";
 import { Form, Link } from "react-router-dom";
 import Maid from '../Images/Maid.png'
 export default function Profile() {
-    const { isAuthenticated, updateFun } = useContext(authContext);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const { isAuthenticated, updateFun, user } = useContext(authContext);
+    // const user = JSON.parse(localStorage.getItem('user'));
     const [myUser, setMyUser] = useState(user);
 
     const handleUpdate = async (event) => {
