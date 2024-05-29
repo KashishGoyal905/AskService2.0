@@ -1,4 +1,6 @@
 import { createContext, useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const authContext = createContext({
     isAuthenticated: '',
@@ -53,6 +55,7 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
         setUser(user);
+        toast.success('Logged in successfully!');
     };
 
     const logout = () => {
@@ -61,11 +64,13 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.removeItem('user');
         setIsAuthenticated(false);
         setUser(null);
+        toast.info('Logged out successfully!');
     };
 
     const updateFun = (updatedUser) => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
+        toast.success('Profile updated successfully!');
     }
 
     return (

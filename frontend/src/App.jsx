@@ -11,6 +11,7 @@ import Singup from './components/Singup';
 import { applyJobAction, signUpAction } from './components/actions';
 import { AuthContextProvider } from './context/AuthContext';
 import Profile from './components/Profile';
+import { ToastContainer, Bounce } from 'react-toastify';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthContextProvider>
+      <ToastContainer autoClose={2000} position="top-center" theme="colored" transition={Bounce} />
       <RouterProvider router={router} />
     </AuthContextProvider>
   );
