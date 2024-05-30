@@ -1,3 +1,4 @@
+--------------------------
 To run this Project:
   // Frontend
   1. Open the terminal
