@@ -1,15 +1,17 @@
 --------------------------
 To run this Project:
-  // Frontend
-  1. Open the terminal
-  2. Go inside the /frontend directory
-  3. Run `npm i`
-  4. Then, run npm start
-  5. Keep it running.
-  // Backend
-  1. Open another terminal(keep that frontend instance running)
-  2. Go inside the /backend directory
-  3. Run `npm i`
-  4. Then, run npm start
-  5. Keep it running.
+  1. --- Frontend --->
+  2. Open the terminal
+  3. Go inside the `/frontend` directory
+  4. Run `npm i`
+  5. Then, run `npm start`
+  6. Keep it running.
+
+ 
+  1. --- Backend --->
+  2. Open another terminal(keep that frontend instance running)
+  3. Go inside the `/backend` directory
+  4. Run `npm i`
+  5. Then, run `npm start`
+  6. Keep it running.
 -----------------------------
