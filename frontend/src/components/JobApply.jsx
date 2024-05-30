@@ -3,7 +3,7 @@ import { useContext } from "react";
 import authContext from '../context/AuthContext';
 
 export default function JobApply() {
-    const { isAuthenticated } = useContext(authContext);
+    const { isAuthenticated, user } = useContext(authContext);
     return (
         <>
             <div className='mt-5'>
@@ -16,21 +16,25 @@ export default function JobApply() {
                         <h2 className="text-2xl font-bold mb-4 text-center">Personal Information</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Full name</label>
-                                <input type="text" name="fullname" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <label className="block text-sm font-medium text-gray-700">Full name<span className="required-asterisk">*</span></label>
+                                <input type="text" name="fullname" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-                                <input type="number" name="mobilenumber" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <label className="block text-sm font-medium text-gray-700">Mobile Number<span className="required-asterisk">*</span></label>
+                                <input type="number" name="mobilenumber" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Email address</label>
-                                <input type="email" name="email" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-                                <p className="text-sm text-gray-500">Use a permanent address where you can receive mail.</p>
+                                <label className="block text-sm font-medium text-gray-700">Email address<span className="required-asterisk">*</span></label>
+                                {user
+                                    ? <>
+                                        <input type="email" name="email" disabled value={user.email} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                        <input type="hidden" name="email" value={user.email} />
+                                    </>
+                                    : <input type="email" name="email" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Applying for</label>
-                                <select name="jobRole" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <label className="block text-sm font-medium text-gray-700">Applying for<span className="required-asterisk">*</span></label>
+                                <select name="jobRole" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase">
                                     <option>maid</option>
                                     <option>cook</option>
                                     <option>cleaner</option>
@@ -38,14 +42,15 @@ export default function JobApply() {
                                     <option>driver</option>
                                     <option>perosnalworker</option>
                                 </select>
+                                {/* <p className="text-sm text-gray-500 m-0">Select a Job Profile</p> */}
                             </div>
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium text-gray-700">Street address</label>
                                 <input type="text" name="address" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">City</label>
-                                <input type="text" name="city" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <label className="block text-sm font-medium text-gray-700">City<span className="required-asterisk">*</span></label>
+                                <input type="text" name="city" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">State / Province</label>
@@ -56,12 +61,14 @@ export default function JobApply() {
                                 <input type="text" name="postalcode" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Profile Picture</label>
-                                <input type="file" name="avatar" accept=".jpg,.png,.jpeg" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <label className="block text-sm font-medium text-gray-700">Profile Picture<span className="required-asterisk">*</span></label>
+                                <input type="file" name="avatar" accept=".jpg,.png,.jpeg" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div className="col-span-2">
-                                <label className="block text-sm font-medium text-gray-700">About</label>
-                                <textarea name="about" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" rows="3" placeholder="Write a few words about yourself."></textarea>
+                                <label className="block text-sm font-medium text-gray-700">About<span className="required-asterisk">*</span></label>
+                                <textarea name="about" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" rows="3" placeholder="Write a few words about yourself."></textarea>
+                                <p className="text-sm text-gray-500">This will help people to know about you.</p>
+
                             </div>
 
                         </div>

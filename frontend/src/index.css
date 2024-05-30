@@ -45,7 +45,15 @@ body {
 
 /* Hire */
 
+
+/* jobApply.jsx */
+.required-asterisk {
+    color: red;
+    margin-left: 0.15rem;
+}
+
 /* footer */
 /* footer {
+    position: relative;
     bottom: 0 !important;
 } */
