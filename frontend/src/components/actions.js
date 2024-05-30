@@ -1,5 +1,7 @@
 // actions.js
 import { redirect } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export async function applyJobAction({ request }) {
     // const formData = await request.formData();
@@ -43,6 +45,8 @@ export async function applyJobAction({ request }) {
         throw new Error('Failed to submit job application');
     }
 
+    // Toast Message
+    toast.success('Job Created Successfully');
     // Redirect or handle success
     return redirect(`/hire/${role}`); // or { redirect: '/some-path' }
 }
@@ -82,6 +86,8 @@ export async function signUpAction({ request }) {
         throw new Error('Failed to SignUp');
     }
 
+    // toast message
+    toast.success('Signed Up Successfully');
     // Redirect or handle success
     return redirect(`/login`); // or { redirect: '/some-path' }
 }

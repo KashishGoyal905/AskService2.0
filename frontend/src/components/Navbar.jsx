@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import authContext from '../context/AuthContext'
+import user1 from '../Images/user1.avif'
 
 export default function Navbar() {
+    // Global funtions for Authentication
     const { isAuthenticated, logout, user } = useContext(authContext);
     // const user = JSON.parse(localStorage.getItem('user'));
 
@@ -17,11 +19,11 @@ export default function Navbar() {
                         <li><Link to="/hire" className="mr-2 hover:bg-primary hover:text-primary-content">Hire</Link></li>
                         <li><Link to="/apply" className="mr-2 hover:bg-primary hover:text-primary-content">Apply For Job</Link></li>
                         <li><Link to="/about" className="mr-2 hover:bg-primary hover:text-primary-content">About</Link></li>
-                        {isAuthenticated && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">
+                        {isAuthenticated && user && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">
                             <div className="avatar online">
                                 <div className="w-8 rounded-full">
                                     {user.image ? <img src={`http://localhost:8080/uploads/images/${user.image}`} alt={user.name} /> :
-                                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt='Profile' />}
+                                        <img src={user1} alt='Profile' />}
                                 </div>
                             </div>
                         </Link></li>}

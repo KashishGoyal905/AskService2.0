@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import authContext from "../context/AuthContext";
 import { Form, Link } from "react-router-dom";
-import Maid from '../Images/Maid.png'
+import user1 from '../Images/user1.avif';
+
 export default function Profile() {
     const { isAuthenticated, updateFun, user } = useContext(authContext);
     // const user = JSON.parse(localStorage.getItem('user'));
@@ -38,8 +39,8 @@ export default function Profile() {
                 <div className='flex flex-row flex-wrap justify-around mt-10'>
                     <div className="card w-96 glass my-6 mx-4">
                         {myUser.image
-                            ? <figure><img src={`http://localhost:8080/uploads/images/${myUser.image}`} alt="Maid" style={{ height: 300, width: 450, }} /></figure>
-                            : <figure><img src={Maid} alt="Maid" style={{ height: 300, }} /></figure>}
+                            ? <figure><img src={`http://localhost:8080/uploads/images/${myUser.image}`} alt="ProfilePic" style={{ height: 300, width: 450, }} /></figure>
+                            : <figure><img src={user1} alt="ProfilePic" style={{ height: 300, width: 450, }} /></figure>}
                         <div className="card-body">
                             <h2 className="card-title">{myUser.name}</h2>
                             <p>{myUser.email}</p>

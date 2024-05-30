@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthContextProvider>
-      <ToastContainer autoClose={2000} position="top-center" theme="colored" transition={Bounce} />
+      <ToastContainer autoClose={1500} position="top-center" theme="colored" transition={Bounce} />
       <RouterProvider router={router} />
     </AuthContextProvider>
   );

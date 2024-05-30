@@ -57,7 +57,7 @@ router.post('/register', async function (req, res) {
 
             // console.log('Token1: ', token);
 
-            res.status(201).json({ message: 'User created successfully', user: savedUser, token: token });
+            res.status(201).json({ message: 'User created successfully', user: savedUser});
         } else {
             res.status(500).json({ message: 'User already exists' });
         }

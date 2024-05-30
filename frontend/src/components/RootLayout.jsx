@@ -7,7 +7,7 @@ export default function RootLayout() {
         <>
             <Navbar />
             <Outlet />
-            <Footer/>
+            <Footer />
         </>
     )
 }
