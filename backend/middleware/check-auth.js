@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
     if (req.method === 'OPTIONS') {
         return next();
     }
+
     try {
         // authorization: 'Bearer Toekn';
         // to check if token exists or not

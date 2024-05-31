@@ -27,6 +27,7 @@ const router = createBrowserRouter([
   },
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Singup />, action: signUpAction },
+  { path: '/updatePass', element: <Singup /> },
 ]);
 
 function App() {

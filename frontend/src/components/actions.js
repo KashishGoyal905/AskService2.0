@@ -28,27 +28,42 @@ export async function applyJobAction({ request }) {
     //     body: JSON.stringify(jobApplication),
     // });
 
+    //* if i want to show error below respective fields i have to use state, therefore i have to move this code inside a function on that component page only with the help of formdata.
+
+    // Extracting data of the form with the help of formData
     const formData = await request.formData();
-
     console.log('FormData entries:', [...formData.entries()]);
+    // extracting token || to only proceed with if the req if the user is authenticated
+    const token = localStorage.getItem('token');
 
-    // Note: No need to manually create an object; you can use FormData directly
-    const response = await fetch('http://localhost:8080/applyjob', {
-        method: 'POST',
-        body: formData, // FormData automatically sets the correct headers
-    });
+    try {
+        // Sending a req to tha backend with form data.
+        const response = await fetch('http://localhost:8080/applyjob', {
+            method: 'POST',
+            body: formData, // FormData automatically sets the correct headers
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        });
 
-    const resData = await response.json();
-    const role = resData.job.jobRole;
+        const resData = await response.json();
+        const role = resData.job.jobRole;
 
-    if (!response.ok) {
-        throw new Error('Failed to submit job application');
+        if (!response.ok) {
+            console.log('Failed to submit job application')
+            throw new Error(resData.message || 'Failed to submit job application');
+        }
+
+        // looging the data for development mode
+        console.log('Job: ', resData.job);
+        // Toast Message
+        toast.success(resData.message);
+        // Redirect or handle success
+        return redirect(`/hire/${role}`);
+    } catch (err) {
+        toast.error(err.message);
+        console.error('Error in creating a job:', err.message, err);
     }
-
-    // Toast Message
-    toast.success('Job Created Successfully');
-    // Redirect or handle success
-    return redirect(`/hire/${role}`); // or { redirect: '/some-path' }
 }
 
 
