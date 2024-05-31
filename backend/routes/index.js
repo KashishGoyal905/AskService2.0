@@ -57,7 +57,7 @@ router.post('/register', async function (req, res) {
 
             // console.log('Token1: ', token);
 
-            res.status(201).json({ message: 'User created successfully', user: savedUser});
+            res.status(201).json({ message: 'User created successfully', user: savedUser });
         } else {
             res.status(500).json({ message: 'User already exists' });
         }
@@ -130,14 +130,28 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
 
 });
 
-// its position matters
-// it will act as authentication
-// all the routes below this could only be accessed if authenticated  
-// router.use(checkAuth);
+
 // CreateJOB
 router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function (req, res) {
+    // extracting values which user has filled in the form
     const { fullname, mobilenumber, email, jobRole, address, city, state, postalcode, about } = req.body;
     // console.log('File:', req.file);
+
+    // checking if the mandatory fields are filled or not
+    if (!fullname || !mobilenumber || !email || !jobRole || !city || !about || !req.file) {
+        return res.status(400).json({ message: 'Please fill all the required fields' })
+    }
+
+    // Additional validation for mobile number and postal code
+    if (!/^\d{10}$/.test(mobilenumber)) {
+        return res.status(400).json({ message: 'Mobile number must contain exactly 10 digits' });
+    }
+
+    if (postalcode && !/^\d{6}$/.test(postalcode)) {
+        return res.status(400).json({ message: 'Postal code must contain exactly 6 digits' });
+    }
+
+    // Creating a job
     const jobApplication = new Job({
         fullname,
         mobilenumber,
@@ -155,8 +169,9 @@ router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function 
 
     try {
         const savedJob = await jobApplication.save();
-        res.status(201).json({ job: savedJob });
+        res.status(201).json({ message: 'Job Created Successfully', job: savedJob });
     } catch (error) {
+        console.log('Failed to create job application | Backend');
         res.status(500).json({ message: 'Failed to save job application', error });
     }
 });

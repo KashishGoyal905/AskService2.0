@@ -21,7 +21,8 @@ export default function JobApply() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Mobile Number<span className="required-asterisk">*</span></label>
-                                <input type="number" name="mobilenumber" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                {/* minLength & maxLength works only on type texts and password | therefore i have to use regular expressions here */}
+                                <input type="text" name="mobilenumber" required minLength={10} maxLength={10} pattern="\d{10}" title="It must contains exactly 10 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Email address<span className="required-asterisk">*</span></label>
@@ -58,7 +59,7 @@ export default function JobApply() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-                                <input type="text" name="postalcode" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                <input type="text" name="postalcode" minLength={6} maxLength={6} pattern="\d{6}" title="It must contain exactly 6 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Profile Picture<span className="required-asterisk">*</span></label>
