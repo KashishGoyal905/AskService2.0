@@ -28,39 +28,51 @@ router.get('/hire/:role', async function (req, res) {
 });
 
 
-// user
+//* --- User ---
 // signup
 router.post('/register', async function (req, res) {
-    console.log('req: ', req.body);
+    // Debugging
+    console.log('SignUp Req: ', req.body);
+    // Extracting data from the req sent to the backend via frontend
     const { name, email, password } = req.body;
+
+    // Checking if all the fields exists or not
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // extra vallidation for the password
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
 
     let user;
     try {
+        // Checking if user already exists or not
         user = await User.findOne({ email: req.body.email });
+
+        if (user) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
         // hashing the password
         let hashedPassword;
         hashedPassword = await bcrypt.hash(password, 12);
 
-        if (!user) {
-            user = new User({
-                name,
-                email,
-                password: hashedPassword,
-            });
-            console.log(user);
-            const savedUser = await user.save();
+        user = new User({
+            name,
+            email,
+            password: hashedPassword,
+        });
+        console.log(user);
+        const savedUser = await user.save();
 
-            // let token;
-            // token = jwt.sign(
-            //     { userId: savedUser._id, email: savedUser.email }, 'tokenSecret', { expiresIn: '1h' }
-            // );
+        // let token;
+        // token = jwt.sign(
+        //     { userId: savedUser._id, email: savedUser.email }, 'tokenSecret', { expiresIn: '1h' }
+        // );
+        // console.log('Token1: ', token);
 
-            // console.log('Token1: ', token);
-
-            res.status(201).json({ message: 'User created successfully', user: savedUser });
-        } else {
-            res.status(500).json({ message: 'User already exists' });
-        }
+        res.status(200).json({ message: 'User created successfully', user: savedUser });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error creating user', error });
@@ -69,23 +81,29 @@ router.post('/register', async function (req, res) {
 
 // login
 router.post('/login', async (req, res) => {
-    console.log(req.body);
+    // Debugging
+    console.log('Login Req: ', req.body);
+    // Extracting data from the req sent to the backend via frontend
     const { email, password } = req.body;
 
-    let user;
+    // Checking if all the fields exists or not
+    if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
 
+    let user;
     try {
         user = await User.findOne({ email: email });
 
         if (!user) {
-            res.status(500).json({ message: 'Invalid credentails' });
+            return res.status(400).json({ message: 'Invalid Credentails' });
         }
 
         let isValidPas = false;
-        isValidPas = bcrypt.compare(password, user.password);
+        isValidPas = await bcrypt.compare(password, user.password);
 
         if (!isValidPas) {
-            res.status(500).json({ message: 'Invalid credentails' });
+            return res.status(400).json({ message: 'Invalid Credentails' });
         }
 
         let token;
@@ -93,11 +111,10 @@ router.post('/login', async (req, res) => {
             { userId: user._id, email: user.email }, 'tokenSecret', { expiresIn: '1h' }
         );
 
-        res.status(201).json({ message: 'User logged in successfully', user: user, token: token });
-
+        return res.status(200).json({ message: 'User logged in successfully', user: user, token: token });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Error signin in user', error });
+        console.log('Error in loggin in the user', error);
+        return res.status(500).json({ message: 'Error signin in user', error });
     }
 });
 
