@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 // defined a user schema
 const userSchema = new Schema({
     name: { type: String, },
-    email: { type: String, },
+    email: { type: String, unique: true, },
     password: { type: String },
     image: { type: String },
 }, { timestamps: true }); // to add createdAt and updatedAt

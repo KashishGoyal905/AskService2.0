@@ -67,25 +67,47 @@ export async function applyJobAction({ request }) {
 }
 
 
+// SignUp Action
 export async function signUpAction({ request }) {
+    // Extracting data from the Form using formData
     const formData = await request.formData();
+
     const user = {
         name: formData.get('name'),
         email: formData.get('email'),
         password: formData.get('password'),
     };
-    console.log('user Application:', user);
+    console.log('SignUp User: ', user);
 
-    // Example of sending data to the backend
-    const response = await fetch('http://localhost:8080/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-    });
+    try {
+        // Sending a POST request to the backend with signup form data
+        const response = await fetch('http://localhost:8080/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
 
-    // It works, to make it work you have to add a middleware (fileupload.none() )in the route on the backend
+        const resData = await response.json();
+
+        // If any error recieved from the backend || next, it will tirgger the catch block
+        if (!response.ok) {
+            console.log('Failed to SignUp', resData.message);
+            throw new Error(resData.message || 'Failed to SignUp');
+        }
+
+        // toast message
+        toast.success(resData.message || 'Signed Up Successfully');
+        // Redirect
+        return redirect(`/login`);
+    } catch (err) {
+        console.log('Failed to SignUp', err.message);
+        toast.error(err.message || 'Failed to SignUp');
+        return redirect(`/signup`);
+    }
+
+    //* It works, to make it work you have to add a middleware (fileupload.none() )in the route on the backend
     // const formData = await request.formData();
 
     // console.log('FormData entries:', [...formData.entries()]);
@@ -95,44 +117,46 @@ export async function signUpAction({ request }) {
     //     method: 'POST',
     //     body: formData, // FormData automatically sets the correct headers
     // });
-
-    if (!response.ok) {
-        console.log('Failed to SignUp');
-        throw new Error('Failed to SignUp');
-    }
-
-    // toast message
-    toast.success('Signed Up Successfully');
-    // Redirect or handle success
-    return redirect(`/login`); // or { redirect: '/some-path' }
+    // rest code same as above
 }
 
+//* This is abondend, it's logic lies in the Logic component itself 
 export async function loginAction({ request }) {
+    // Extracting data from the Form using formData
     const formData = await request.formData();
+
     const user = {
         email: formData.get('email'),
         password: formData.get('password'),
     };
-    console.log('user Application:', user);
+    console.log('Login User: ', user);
 
-    // Example of sending data to the backend
-    const response = await fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-    });
+    try {
+        // Sending a POST request to the backend with Login form data
+        const response = await fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
 
-    if (!response.ok) {
-        console.log('Failed to login');
-        throw new Error('Failed to login');
+        const resData = await response.json();
+
+        // If any error recieved from the backend || next, it will tirgger the catch block
+        if (!response.ok) {
+            console.log(resData.message || 'Failed to Login');
+            throw new Error(resData.message || 'Failed to Login');
+        }
+
+        // Setting the token recieved from the backend to the localStorage
+        localStorage.setItem('token', resData.token);
+
+        // Redirect
+        return redirect(`/ `);
+    } catch (err) {
+        console.log('Failed to Login', err.message);
+        toast.error(err.message || 'Failed to Login');
+        return redirect(`/login`);
     }
-
-    const data = await response.json();
-    localStorage.setItem('token', data.token);
-    console.log(data.message);
-
-    // Redirect or handle success
-    return redirect(`/`); // or { redirect: '/some-path' }
 }

@@ -2,6 +2,10 @@ import { useContext, useState } from "react";
 import { Form, Link, useNavigate } from "react-router-dom";
 import authContext from "../context/AuthContext";
 
+import { redirect } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -10,31 +14,41 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        // Extracting data from the Form using state
         const user = {
             email: email,
             password: password,
         };
-        console.log('user Application:', user);
+        console.log('Login User: ', user);
 
-        // Example of sending data to the backend
-        const response = await fetch('http://localhost:8080/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
+        try {
+            // Sending a POST request to the backend with Login form data
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            });
 
-        if (!response.ok) {
-            console.log('Failed to login');
-            throw new Error('Failed to login');
+            const resData = await response.json();
+
+            // If any error recieved from the backend || next, it will tirgger the catch block
+            if (!response.ok) {
+                console.log(resData.message || 'Failed to Login');
+                throw new Error(resData.message || 'Failed to Login');
+            }
+
+            login(resData.token, resData.user);
+
+        } catch (err) {
+            console.log('Failed to Login: ', err.message);
+            toast.error(err.message || 'Failed to Login');
+            e.target.reset();
+            return redirect(`/login`);
         }
 
-        const data = await response.json();
-        login(data.token, data.user);
-        console.log(data.message);
-
-        // Redirect or handle success
+        // Redirect
         return navigate(`/`);
     }
 
