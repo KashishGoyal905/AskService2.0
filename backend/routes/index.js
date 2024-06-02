@@ -10,6 +10,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
 
+const fs = require('fs');
+const path = require('path');
+
 // Import user routes
 // const userRoutes = require('./users');
 // router.use('/user', userRoutes);
@@ -118,31 +121,58 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
 // update profile
 router.post('/profile/:id', fileUpload.single('image'), async function (req, res) {
+    // Finding the user 
     const user = await User.findById(req.params.id);
-    console.log(req.body);
-    console.log(req.file);
-    const { name, email } = req.body;
+    // Debugging
+    console.log('Updated User Body: ', req.body);
+    console.log('Updated User File: ', req.file);
+
     if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(400).json({ message: 'User not found' });
+    }
+    const { name, email } = req.body;
+
+    // Checking if not a single value is sent
+    if (!name && !email && !req.file) {
+        return res.status(400).json({ message: 'Please fill at least one field' });
     }
 
     // Update user information
-    user.name = name;
-    user.email = email;
-
-    if (req.file) {
-        user.image = req.file.filename; // Save the path to the uploaded image
+    if (name) {
+        user.name = name;
+    }
+    if (email) {
+        user.email = email;
     }
 
-    console.log(user);
+    // If it exists | because there could be the case when user was updating it for the first time.
+    if (req.file && user.image) {
+        // deleting previous image
+        const imagePath = path.join(__dirname, '../uploads/images', user.image);
+        fs.unlink(imagePath, err => {
+            if (err) {
+                console.log('Error in deleting previous Profile Pic: ', err);
+            } else {
+                console.log('Previous Profile Pic deleted successfully');
+            }
+        });
+    }
+
+    if (req.file) {
+        user.image = req.file.filename;
+    }
+
+    // Debugging
+    console.log('Updated User: ', user);
 
     try {
         const savedUser = await user.save();
-        res.status(201).json({ user: savedUser });
+        return res.status(200).json({ message: 'User Updated Succesfully', user: savedUser });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to save job application', error });
+        return res.status(400).json({ message: 'Failed to Update the user', error });
     }
 
 });

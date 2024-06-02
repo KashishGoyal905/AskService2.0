@@ -77,6 +77,7 @@ export async function signUpAction({ request }) {
         email: formData.get('email'),
         password: formData.get('password'),
     };
+    // Debugging
     console.log('SignUp User: ', user);
 
     try {
@@ -89,9 +90,10 @@ export async function signUpAction({ request }) {
             body: JSON.stringify(user),
         });
 
+        // Getting data back from the backend
         const resData = await response.json();
 
-        // If any error recieved from the backend || next, it will tirgger the catch block
+        // If any error recieved from the backend || it will tirgger the catch block present below
         if (!response.ok) {
             console.log('Failed to SignUp', resData.message);
             throw new Error(resData.message || 'Failed to SignUp');
@@ -101,7 +103,7 @@ export async function signUpAction({ request }) {
         toast.success(resData.message || 'Signed Up Successfully');
         // Redirect
         return redirect(`/login`);
-    } catch (err) {
+    } catch (err) { // it holds the error sent by the above Error method
         console.log('Failed to SignUp', err.message);
         toast.error(err.message || 'Failed to SignUp');
         return redirect(`/signup`);

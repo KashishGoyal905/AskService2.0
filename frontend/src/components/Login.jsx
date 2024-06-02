@@ -33,7 +33,7 @@ export default function Login() {
 
             const resData = await response.json();
 
-            // If any error recieved from the backend || next, it will tirgger the catch block
+            // If any error recieved from the backend || it will tirgger the catch block present below
             if (!response.ok) {
                 console.log(resData.message || 'Failed to Login');
                 throw new Error(resData.message || 'Failed to Login');

@@ -3,6 +3,10 @@ import authContext from "../context/AuthContext";
 import { Form, Link } from "react-router-dom";
 import user1 from '../Images/user1.avif';
 
+import { redirect } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Profile() {
     const { isAuthenticated, updateFun, user } = useContext(authContext);
     // const user = JSON.parse(localStorage.getItem('user'));
@@ -10,25 +14,34 @@ export default function Profile() {
 
     const handleUpdate = async (event) => {
         event.preventDefault();
+
         const fd = new FormData(event.target);
         const data = Object.fromEntries(fd.entries());
-        console.log(data);
+        console.log('Updated User Form Details: ', data);
 
-        // Note: No need to manually create an object; you can use FormData directly
-        const response = await fetch(`http://localhost:8080/profile/${user._id}`, {
-            method: 'POST',
-            body: fd, // FormData automatically sets the correct headers
-        });
+        try {
+            // Note: No need to manually create an object | you can use FormData directly
+            const response = await fetch(`http://localhost:8080/profile/${user._id}`, {
+                method: 'POST',
+                body: fd, // FormData automatically sets the correct headers
+            });
 
-        const resData = await response.json();
-        setMyUser(resData.user);
+            const resData = await response.json();
 
-        if (!response.ok) {
-            throw new Error('Failed to submit job application');
+            if (!response.ok) {
+                throw new Error(resData.message || 'Failed to update the user');
+            }
+
+            setMyUser(resData.user);
+            updateFun(resData.user);
+            event.target.reset();
+            return;
+        } catch (err) {
+            console.log('Failed to Update the Profile: ', err.message);
+            toast.error(err.message || 'Failed to Update the Profile');
+            event.target.reset();
+            return redirect(`/profile/${user._id}`);
         }
-
-        updateFun(resData.user);
-        event.target.reset();
     }
 
     return (
@@ -36,6 +49,7 @@ export default function Profile() {
             {!isAuthenticated && <Link to='/'>Home</Link>}
             {isAuthenticated && <div className='mt-10' >
                 <h1 className='text-3xl text-center text-bold'>{myUser.name}'s Profile</h1>
+                <hr className="mt-4" />
                 <div className='flex flex-row flex-wrap justify-around mt-10'>
                     <div className="card w-96 glass my-6 mx-4">
                         {myUser.image
