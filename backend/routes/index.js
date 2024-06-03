@@ -13,6 +13,10 @@ const checkAuth = require('../middleware/check-auth');
 const fs = require('fs');
 const path = require('path');
 
+// password reset
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
 // Import user routes
 // const userRoutes = require('./users');
 // router.use('/user', userRoutes);
@@ -175,6 +179,98 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
         return res.status(400).json({ message: 'Failed to Update the user', error });
     }
 
+});
+
+// Password Update
+router.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+    console.log('Body of Update Password: ', req.body);
+
+    try {
+        const user = await User.findOne({ email: email });
+        // checking if user exists or not
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        // Generate a reset token
+        const token = crypto.randomBytes(32).toString('hex');
+
+        // Set token and expiration on the user
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        // Send email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // Use your email service
+            auth: {
+                user: 'resetpass905@gmail.com',
+                pass: 'afkrgeiwdsuhecdl',
+            },
+            host: 'smtp.gmail.com',
+            secure: false
+        });
+
+        const mailOptions = {
+            to: user.email,
+            from: 'resetpass905@gmail.com',
+            subject: 'Password Reset',
+            text: ` Hello ${user.name},
+
+            We received a request to reset the password for your account.
+            
+            To reset your password, please click the link below or copy and paste it into your browser:
+            http://localhost:3000/reset-password/${token}
+            
+            If you did not request a password reset, please ignore this email or contact support if you have any questions.
+            
+            Thank you,
+            The AskService Team
+            
+            For support, contact us at supportService@gmail.com`
+        };
+
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error('Error sending email: ', err);
+                return res.status(500).send({ message: 'Error sending email' });
+            }
+            return res.status(200).send({ message: 'Password reset email sent' });
+        });
+
+    } catch (err) {
+        console.error('Error processing request: ', err);
+        return res.status(500).send({ message: 'Error processing request' });
+    }
+});
+
+// Update the password
+router.post('/reset-password/:token', async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            return res.status(400).send({ message: 'Password reset token is invalid or has expired' });
+        }
+
+        // Update the user's password
+        user.password = await bcrypt.hash(password, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).send({ message: 'Password has been reset' });
+    } catch (err) {
+        console.error('Error resetting password: ', err);
+        res.status(500).send({ message: 'Error resetting password' });
+    }
 });
 
 

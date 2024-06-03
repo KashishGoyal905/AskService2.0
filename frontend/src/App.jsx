@@ -12,6 +12,8 @@ import { applyJobAction, signUpAction } from './components/actions';
 import { AuthContextProvider } from './context/AuthContext';
 import Profile from './components/Profile';
 import { ToastContainer, Bounce } from 'react-toastify';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 const router = createBrowserRouter([
   {
@@ -27,7 +29,8 @@ const router = createBrowserRouter([
   },
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Singup />, action: signUpAction },
-  { path: '/updatePass', element: <Singup /> },
+  { path: '/updatePass', element: <ForgotPassword /> },
+  { path: '/reset-password/:token', element: <ResetPassword /> },
 ]);
 
 function App() {
