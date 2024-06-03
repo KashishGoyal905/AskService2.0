@@ -8,6 +8,8 @@ const userSchema = new Schema({
     email: { type: String, unique: true, },
     password: { type: String },
     image: { type: String },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date }
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
