@@ -15,14 +15,17 @@ export default function ResetPassword() {
         // Extracting data from the Form
         const fd = new FormData(event.target);
         const data = Object.fromEntries(fd.entries());
-        //extract email from fd
+
+        //extract pass and confirm pass from fd
         const password = data.password;
         const confirmPassword = data.confirmPassword;
 
+        // Checking
         if (password !== confirmPassword) {
             toast.error('Passwords do not match');
             return;
         }
+        // Debugging
         console.log('Passwords for Update: ', data);
 
 
@@ -77,6 +80,7 @@ export default function ResetPassword() {
                                         id="password"
                                         name="password"
                                         type="password"
+                                        minLength={8}
                                         required
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
@@ -89,9 +93,10 @@ export default function ResetPassword() {
                                 </label>
                                 <div className="mt-1">
                                     <input
-                                        id="confirmPassword"
-                                        name="confirm-password"
+                                        id="confirm-password"
+                                        name="confirmPassword"
                                         type="password"
+                                        minLength={8}
                                         required
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />

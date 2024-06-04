@@ -183,17 +183,20 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
 
 // Password Update
 router.post('/forgot-password', async (req, res) => {
+    // Extracting email from the body
     const { email } = req.body;
+    // Debugging
     console.log('Body of Update Password: ', req.body);
 
     try {
         const user = await User.findOne({ email: email });
+
         // checking if user exists or not
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
 
-        // Generate a reset token
+        // Generate a random token for reset
         const token = crypto.randomBytes(32).toString('hex');
 
         // Set token and expiration on the user
@@ -203,10 +206,10 @@ router.post('/forgot-password', async (req, res) => {
 
         // Send email
         const transporter = nodemailer.createTransport({
-            service: 'gmail', // Use your email service
+            service: 'gmail', // email service
             auth: {
-                user: 'resetpass905@gmail.com',
-                pass: 'afkrgeiwdsuhecdl',
+                user: 'resetpass905@gmail.com', // email service id
+                pass: 'afkrgeiwdsuhecdl', // email service Password(App Password)
             },
             host: 'smtp.gmail.com',
             secure: false
@@ -247,15 +250,18 @@ router.post('/forgot-password', async (req, res) => {
 
 // Update the password
 router.post('/reset-password/:token', async (req, res) => {
+    // Extracting token and password from URL and the body
     const { token } = req.params;
     const { password } = req.body;
 
     try {
+        // Finding the user with the help of token if the time has not expired
         const user = await User.findOne({
             resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() },
         });
 
+        // if time expired or user not found
         if (!user) {
             return res.status(400).send({ message: 'Password reset token is invalid or has expired' });
         }
@@ -266,10 +272,10 @@ router.post('/reset-password/:token', async (req, res) => {
         user.resetPasswordExpires = undefined;
         await user.save();
 
-        res.status(200).send({ message: 'Password has been reset' });
+        return res.status(200).send({ message: 'Password has been reset' });
     } catch (err) {
         console.error('Error resetting password: ', err);
-        res.status(500).send({ message: 'Error resetting password' });
+        return res.status(500).send({ message: 'Error resetting password' });
     }
 });
 

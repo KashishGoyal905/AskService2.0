@@ -38,7 +38,7 @@ export default function Login() {
                 console.log(resData.message || 'Failed to Login');
                 throw new Error(resData.message || 'Failed to Login');
             }
-
+            
             login(resData.token, resData.user);
 
         } catch (err) {
