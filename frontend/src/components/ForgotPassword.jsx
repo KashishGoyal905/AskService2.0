@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ForgotPassword() {
+    // for navigation
     let navigate = useNavigate()
 
     async function handlePassUpdate(event) {
@@ -14,11 +15,12 @@ export default function ForgotPassword() {
         const data = Object.fromEntries(fd.entries());
         //extract email from fd
         const email = data.email;
+        // Debugging
         console.log('Email for passwrod update: ', data);
 
-        // for navigation
 
         try {
+            // Sending req to the backend with eamil
             const response = await fetch('http://localhost:8080/forgot-password', {
                 method: 'POST',
                 headers: {
@@ -27,6 +29,7 @@ export default function ForgotPassword() {
                 body: JSON.stringify({ email }),
             });
 
+            // Getting response back from the backend
             const resData = await response.json();
             if (!response.ok) {
                 throw new Error(resData.message || 'Failed to send reset email');
@@ -73,7 +76,6 @@ export default function ForgotPassword() {
                                         name="email"
                                         type="email"
                                         required
-                                        // onChange={(e) => setEmail(e.target.value)}
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
                                 </div>
