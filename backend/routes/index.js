@@ -325,4 +325,20 @@ router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function 
     }
 });
 
+// Delete job card
+router.delete('/jobs/:jobId', async function (req, res) {
+    // Extracting id
+    const jobId = req.params.jobId;
+    console.log(jobId);
+
+    try {
+        // Deleting...
+        await Job.findByIdAndDelete(jobId);
+        return res.status(200).json({ message: 'Job deleted successfully' });
+    } catch (error) {
+        console.log('Failed to delete job application | Backend');
+        res.status(500).json({ message: 'Failed to delete job application', error });
+    }
+});
+
 module.exports = router; //exporting the routes

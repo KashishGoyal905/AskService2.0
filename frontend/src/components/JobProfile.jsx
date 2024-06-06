@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function JobProfile() {
     // To know if the user id logged in or not
-    const { isAuthenticated } = useContext(authContext);
+    const { isAuthenticated, user } = useContext(authContext);
     // once the jobs are fetched from the db, we will re-render the component
     const [jobs, setJobs] = useState();
     // while the jobs are loading from the backend
@@ -31,10 +31,38 @@ export default function JobProfile() {
 
     // function for handling Hire event
     async function handleJobHire() {
-        
+
         toast.success('Email Sent to the Person');
     }
 
+    // Funciton to handle job deletion
+    async function handleJobDelete(jobId) {
+        // Confirming
+        if (!window.confirm("Are you sure you want to delete this job?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/jobs/${jobId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const resData = await response.json();
+
+            if (!response.ok) {
+                console.log(resData.message || 'Failed to delete job application');
+                throw new Error(resData.message || 'Failed to delete job application');
+            }
+
+            // To re-render the component
+            setJobs(jobs.filter(job => job._id !== jobId));
+            toast.success(resData.message || 'Job deleted successfully');
+        }
+        catch (err) {
+            console.log("Failed to delete job:", err.message);
+            toast.error(err.message || "Failed to delete job.");
+        }
+    }
     return (
         <>
             <div className='mt-5'>
@@ -89,6 +117,12 @@ export default function JobProfile() {
                                             {job.about}
                                         </p>
                                         <div className="card-actions justify-end">
+                                            {isAuthenticated && job.email === user.email
+                                                && (<>
+                                                    <button ><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/pastel-glyph/64/40C057/create-new--v3.png" alt="Edit_Icon" /></button>
+                                                    <button onClick={() => { handleJobDelete(job._id) }}><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/material-rounded/24/FA5252/trash.png" alt="Delete_Icon" /></button>
+                                                </>)
+                                            }
                                             <button className="btn btn-primary" disabled={!isAuthenticated} onClick={handleJobHire}>Hire!</button>
                                         </div>
                                     </div>
