@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Form, Link, useParams } from "react-router-dom";
 import { useContext } from "react";
 import authContext from '../context/AuthContext'
 import { toast } from "react-toastify";
@@ -12,6 +12,42 @@ export default function JobProfile() {
     const [jobs, setJobs] = useState();
     // while the jobs are loading from the backend
     const [isLoading, setIsLoading] = useState(false);
+
+    let id = '';
+
+    function handleEditJob(jobId) {
+        document.getElementById('my_modal_1').showModal();
+        id = jobId;
+    }
+
+    async function handleEditSubmit(event) {
+        event.preventDefault();
+
+        const fd = new FormData(event.target);
+        const data = Object.fromEntries(fd.entries());
+        console.log('Updated Job Form Details: ', data);
+
+        try {
+            const response = await fetch(`http://localhost:8080/jobs/${id}`, {
+                method: 'POST',
+                body: fd,
+            });
+
+            const resData = await response.json();
+
+            if (!response.ok) {
+                throw new Error(resData.message || 'Failed to update job application');
+            }
+
+            const updatedJob = resData.job;
+            setJobs(jobs.map(job => (job._id === id ? updatedJob : job)));
+            toast.success(resData.message || 'Job updated successfully');
+            document.getElementById('my_modal_1').close();
+        } catch (err) {
+            console.error("Failed to update job:", err.message);
+            toast.error(err.message || "Failed to update job.");
+        }
+    }
 
     // to get hold of the url
     const params = useParams();
@@ -119,7 +155,7 @@ export default function JobProfile() {
                                         <div className="card-actions justify-end">
                                             {isAuthenticated && job.email === user.email
                                                 && (<>
-                                                    <button ><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/pastel-glyph/64/40C057/create-new--v3.png" alt="Edit_Icon" /></button>
+                                                    <button onClick={() => { handleEditJob(job._id) }}><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/pastel-glyph/64/40C057/create-new--v3.png" alt="Edit_Icon" /></button>
                                                     <button onClick={() => { handleJobDelete(job._id) }}><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/material-rounded/24/FA5252/trash.png" alt="Delete_Icon" /></button>
                                                 </>)
                                             }
@@ -132,6 +168,81 @@ export default function JobProfile() {
                     }
                 </div>
             </div >
+
+            <dialog className="modal" id="my_modal_1">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Edit Job</h3>
+                    <Form method="post" className="space-y-8" encType="multipart/form-data" onSubmit={handleEditSubmit}>
+                        <div className="bg-white shadow-md rounded-lg p-8">
+                            <h2 className="text-2xl font-bold mb-4 text-center">Personal Information</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Full name<span className="required-asterisk">*</span></label>
+                                    <input type="text" name="fullname"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Mobile Number<span className="required-asterisk">*</span></label>
+                                    {/* minLength & maxLength works only on type texts and password | therefore i have to use regular expressions here */}
+                                    <input type="text" name="mobilenumber"  minLength={10} maxLength={10} pattern="\d{10}" title="It must contains exactly 10 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Email address<span className="required-asterisk">*</span></label>
+                                    {user
+                                        ? <>
+                                            <input type="email" name="email" disabled value={user.email} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                            <input type="hidden" name="email" value={user.email} />
+                                        </>
+                                        : <input type="email" name="email"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Applying for<span className="required-asterisk">*</span></label>
+                                    <select name="jobRole"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase">
+                                        <option>maid</option>
+                                        <option>cook</option>
+                                        <option>cleaner</option>
+                                        <option>babycaretaker</option>
+                                        <option>driver</option>
+                                        <option>perosnalworker</option>
+                                    </select>
+                                    {/* <p className="text-sm text-gray-500 m-0">Select a Job Profile</p> */}
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">Street address</label>
+                                    <input type="text" name="address" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">City<span className="required-asterisk">*</span></label>
+                                    <input type="text" name="city"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">State / Province</label>
+                                    <input type="text" name="state" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
+                                    <input type="text" name="postalcode" minLength={6} maxLength={6} pattern="\d{6}" title="It must contain exactly 6 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Profile Picture<span className="required-asterisk">*</span></label>
+                                    <input type="file" name="avatar" accept=".jpg,.png,.jpeg"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">About<span className="required-asterisk">*</span></label>
+                                    <textarea name="about"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" rows="3" placeholder="Write a few words about yourself."></textarea>
+                                    <p className="text-sm text-gray-500">This will help people to know about you.</p>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                            {isAuthenticated
+                                ? <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                : <Link to='/login' className="btn btn-primary">Login to create</Link>}
+                        </div>
+                    </Form>
+                </div>
+            </dialog>
         </>
     )
 }
