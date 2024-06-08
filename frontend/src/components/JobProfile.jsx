@@ -13,13 +13,14 @@ export default function JobProfile() {
     // while the jobs are loading from the backend
     const [isLoading, setIsLoading] = useState(false);
 
+    // open modal to update the job card
     let id = '';
-
     function handleEditJob(jobId) {
         document.getElementById('my_modal_1').showModal();
         id = jobId;
     }
 
+    // Hnadles the update job card submission
     async function handleEditSubmit(event) {
         event.preventDefault();
 
@@ -44,6 +45,7 @@ export default function JobProfile() {
             toast.success(resData.message || 'Job updated successfully');
             document.getElementById('my_modal_1').close();
         } catch (err) {
+            document.getElementById('my_modal_1').close();
             console.error("Failed to update job:", err.message);
             toast.error(err.message || "Failed to update job.");
         }
@@ -99,6 +101,7 @@ export default function JobProfile() {
             toast.error(err.message || "Failed to delete job.");
         }
     }
+
     return (
         <>
             <div className='mt-5'>
@@ -170,20 +173,19 @@ export default function JobProfile() {
             </div >
 
             <dialog className="modal" id="my_modal_1">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">Edit Job</h3>
-                    <Form method="post" className="space-y-8" encType="multipart/form-data" onSubmit={handleEditSubmit}>
-                        <div className="bg-white shadow-md rounded-lg p-8">
-                            <h2 className="text-2xl font-bold mb-4 text-center">Personal Information</h2>
+                <div className="modal-box mt-0">
+                    <Form method="post" className="space-y-0" encType="multipart/form-data" onSubmit={handleEditSubmit}>
+                        <div className="bg-white shadow-md rounded-lg p-4">
+                            <h2 className="text-xl font-bold mb-4 text-center">Edit Job Information</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Full name<span className="required-asterisk">*</span></label>
-                                    <input type="text" name="fullname"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                    <input type="text" name="fullname" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Mobile Number<span className="required-asterisk">*</span></label>
                                     {/* minLength & maxLength works only on type texts and password | therefore i have to use regular expressions here */}
-                                    <input type="text" name="mobilenumber"  minLength={10} maxLength={10} pattern="\d{10}" title="It must contains exactly 10 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                    <input type="text" name="mobilenumber" minLength={10} maxLength={10} pattern="\d{10}" title="It must contains exactly 10 digits" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Email address<span className="required-asterisk">*</span></label>
@@ -192,11 +194,11 @@ export default function JobProfile() {
                                             <input type="email" name="email" disabled value={user.email} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                             <input type="hidden" name="email" value={user.email} />
                                         </>
-                                        : <input type="email" name="email"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />}
+                                        : <input type="email" name="email" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Applying for<span className="required-asterisk">*</span></label>
-                                    <select name="jobRole"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase">
+                                    <select name="jobRole" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase">
                                         <option>maid</option>
                                         <option>cook</option>
                                         <option>cleaner</option>
@@ -212,7 +214,7 @@ export default function JobProfile() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">City<span className="required-asterisk">*</span></label>
-                                    <input type="text" name="city"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                    <input type="text" name="city" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">State / Province</label>
@@ -224,21 +226,21 @@ export default function JobProfile() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Profile Picture<span className="required-asterisk">*</span></label>
-                                    <input type="file" name="avatar" accept=".jpg,.png,.jpeg"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                    <input type="file" name="avatar" accept=".jpg,.png,.jpeg" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 </div>
                                 <div className="col-span-2">
                                     <label className="block text-sm font-medium text-gray-700">About<span className="required-asterisk">*</span></label>
-                                    <textarea name="about"  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" rows="3" placeholder="Write a few words about yourself."></textarea>
+                                    <textarea name="about" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" rows="3" placeholder="Write a few words about yourself."></textarea>
                                     <p className="text-sm text-gray-500">This will help people to know about you.</p>
 
                                 </div>
 
                             </div>
                         </div>
-                        <div className="mt-6 flex justify-end">
+                        <div className="mt-8 flex justify-end">
                             {isAuthenticated
-                                ? <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
-                                : <Link to='/login' className="btn btn-primary">Login to create</Link>}
+                                ? <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update</button>
+                                : <Link to='/login' className="btn btn-primary">Login to Update</Link>}
                         </div>
                     </Form>
                 </div>
