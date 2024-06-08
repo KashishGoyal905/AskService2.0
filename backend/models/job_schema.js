@@ -14,9 +14,8 @@ const jobSchema = new Schema({
     postalcode: { type: Number },
     about: { type: String, },
     avatar: { type: String, required: true, required: true, },
-    isHired: { type: Boolean, default: false },
 }, { timestamps: true }); // to add createdAt and updatedAt
 
-    
+
 const Job = mongoose.model('Job', jobSchema); // creating a mongoose model
 module.exports = Job; //exporting the model

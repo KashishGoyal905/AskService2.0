@@ -36,7 +36,8 @@ router.get('/hire/:role', async function (req, res) {
 
 
 //* --- User ---
-// signup
+
+//* SIGNUP
 router.post('/register', async function (req, res) {
     // Debugging
     console.log('SignUp Req: ', req.body);
@@ -86,7 +87,7 @@ router.post('/register', async function (req, res) {
     }
 });
 
-// login
+//* LOGIN
 router.post('/login', async (req, res) => {
     // Debugging
     console.log('Login Req: ', req.body);
@@ -125,8 +126,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
-// update profile
+//* UPDATE User Profile
 router.post('/profile/:id', fileUpload.single('image'), async function (req, res) {
     // Finding the user 
     const user = await User.findById(req.params.id);
@@ -181,7 +181,7 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
 
 });
 
-// Password Update
+//* NodeMaielr || Password Update Email
 router.post('/forgot-password', async (req, res) => {
     // Extracting email from the body
     const { email } = req.body;
@@ -248,7 +248,7 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-// Update the password
+//* UPDATE || Forgot the password
 router.post('/reset-password/:token', async (req, res) => {
     // Extracting token and password from URL and the body
     const { token } = req.params;
@@ -279,83 +279,89 @@ router.post('/reset-password/:token', async (req, res) => {
     }
 });
 
-// Update the job
+//* UPDATE The Job Card
 router.post('/jobs/:jobId', fileUpload.single('avatar'), async (req, res) => {
-    console.log(req.body);
+    console.log("Req body of Job card form", req.body);
+
+    // Extracting id from the url
     const jobId = req.params.jobId;
     // extracting values which user has filled in the form
     const { fullname, mobilenumber, address, city, state, postalcode, about } = req.body;
 
-    // Additional validation for mobile number and postal code
+
+    // Checking if empty form
+    if (!fullname && !mobilenumber && !address && !city && !state && !req.file && !postalcode && !about) {
+        return res.status(400).json({ message: 'Please fill atleast one of the fields' })
+    }
+    // if mobile number and postal code are filled then they must of lenght 10 and 6 respectively
     if (mobilenumber && !/^\d{10}$/.test(mobilenumber)) {
         return res.status(400).json({ message: 'Mobile number must contain exactly 10 digits' });
     }
-
     if (postalcode && !/^\d{6}$/.test(postalcode)) {
         return res.status(400).json({ message: 'Postal code must contain exactly 6 digits' });
     }
+
+
     try {
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).send({ message: 'Job not found' });
         }
 
-        if (job.fullname) {
+        // Debugging
+        console.log('Prevous Job: ', job);
+
+        if (fullname) {
             job.fullname = fullname;
         }
-        if (job.mobilenumber) {
+        if (mobilenumber) {
             job.mobilenumber = mobilenumber;
         }
-        if (job.address) {
+        if (address) {
             job.address = address;
         }
-        if (job.city) {
+        if (city) {
             job.city = city;
         }
-        if (job.state) {
+        if (state) {
             job.state = state;
         }
-        if (job.postalcode) {
+        if (postalcode) {
             job.postalcode = postalcode;
         }
-        if (job.about) {
+        if (about) {
             job.about = about;
         }
 
-        // If it exists | because there could be the case when user was updating it for the first time.
-        if (req.file && job.avatar) {
-            // deleting previous image
+        // Deleting prevous job card avatar
+        if (req.file) {
+            // path of the image
             const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
+            // deleting previous image
             fs.unlink(imagePath, err => {
                 if (err) {
-                    console.log('Error in deleting previous Profile Pic: ', err);
+                    console.log('Error in deleting previous Job Card avatar: ', err);
                 } else {
-                    console.log('Previous Profile Pic deleted successfully');
+                    console.log('Previous avatar deleted successfully');
                 }
             });
-        }
-
-        if (req.file) {
+            // Assigning||Adding a new one
             job.avatar = req.file.filename;
         }
 
-        // Debugging user
-        console.log('Updated User: ', job);
+        // Debugging
+        console.log('Updated Job: ', job);
 
-        try {
-            const savedJob = await job.save();
-            return res.status(200).json({ message: 'User Updated Succesfully', job: savedJob });
-        } catch (error) {
-            console.log(error);
-            return res.status(400).json({ message: 'Failed to Update the user', error });
-        }
+        // Saving the updated job
+        const savedJob = await job.save();
+        return res.status(200).json({ message: 'Job Card Updated Succesfully', job: savedJob });
     } catch (err) {
         console.error('Error in updating the job card: ', err);
         return res.status(500).send({ message: 'Error in updating the job card' });
     }
-})
+});
 
-// CreateJOB
+//* CREATE Job Application
 router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function (req, res) {
     // extracting values which user has filled in the form
     const { fullname, mobilenumber, email, jobRole, address, city, state, postalcode, about } = req.body;
@@ -400,12 +406,12 @@ router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function 
     }
 });
 
-// Delete job card
+//* DELETE The Job Card
 router.delete('/jobs/:jobId', async function (req, res) {
     // Extracting id
     const jobId = req.params.jobId;
     // Debugging
-    console.log(jobId);
+    console.log('JObId of the job card: ', jobId);
 
     try {
         // Checking if job exists
@@ -414,9 +420,19 @@ router.delete('/jobs/:jobId', async function (req, res) {
             return res.status(404).json({ message: 'Failed to find job application' });
         }
 
-        // Deleting...
+        // Deleting image
+        const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
+        fs.unlink(imagePath, err => {
+            if (err) {
+                console.log('Error in deleting previous Job Card avatar: ', err);
+            } else {
+                console.log('Previous avatar deleted successfully');
+            }
+        });
+
+        // Deleting Job Card...
         await Job.findByIdAndDelete(jobId);
-        return res.status(200).json({ message: 'Job deleted successfully' });
+        return res.status(200).json({ message: 'Job Application deleted successfully' });
     } catch (error) {
         console.log('Failed to delete job application | Backend');
         res.status(500).json({ message: 'Failed to delete job application', error });
