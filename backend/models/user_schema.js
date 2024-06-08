@@ -9,7 +9,8 @@ const userSchema = new Schema({
     password: { type: String },
     image: { type: String },
     resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date }
+    resetPasswordExpires: { type: Date },
+    
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
