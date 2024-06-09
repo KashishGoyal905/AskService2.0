@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import authContext from "../context/AuthContext";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import user1 from '../Images/user1.avif';
 
 import { redirect } from "react-router-dom";
@@ -8,9 +8,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Profile() {
-    const { isAuthenticated, updateFun, user } = useContext(authContext);
+    const { isAuthenticated, updateFun, user, logout } = useContext(authContext);
     // const user = JSON.parse(localStorage.getItem('user'));
     const [myUser, setMyUser] = useState(user);
+    // Navigate
+    const navigate = useNavigate();
 
     const handleUpdate = async (event) => {
         event.preventDefault();
@@ -41,6 +43,34 @@ export default function Profile() {
             toast.error(err.message || 'Failed to Update the Profile');
             event.target.reset();
             return redirect(`/profile/${user._id}`);
+        }
+    }
+
+    // Hnadle Account Delteion
+    async function handleAccDelete(userId) {
+        // Confirming
+        if (!window.confirm("Are you sure you want to delete your account?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/profile/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const resData = await response.json();
+
+            if (!response.ok) {
+                console.log(resData.message || 'Failed to delete User Account');
+                throw new Error(resData.message || 'Failed to delete User Account');
+            }
+
+            logout();
+            navigate('/');
+            toast.success(resData.message || 'User Account deleted successfully');
+        } catch (err) {
+            console.log('Failed to delete User Account: ', err.message);
+            toast.error(err.message || 'Failed to delete User Account');
         }
     }
 
@@ -85,6 +115,9 @@ export default function Profile() {
                                 </div>
                             </div>
                         </Form>
+                        {isAuthenticated && <div className="mt-8 flex justify-center">
+                            <button className="btn btn-outline btn-error" onClick={() => handleAccDelete(myUser._id)}>Delete Account</button>
+                        </div>}
                     </div>
                 </div>
             </div >}
