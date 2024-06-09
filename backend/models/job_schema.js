@@ -13,7 +13,8 @@ const jobSchema = new Schema({
     state: { type: String, },
     postalcode: { type: Number },
     about: { type: String, },
-    avatar: { type: String, required: true, required: true, },
+    avatar: { type: String, required: true, },
+    isHired: { type: Boolean, default: false }, // to make changes in the frontend
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
