@@ -88,14 +88,10 @@ export default function JobProfile() {
                 throw new Error(resData.message || 'Failed to hire the Person');
             }
 
-            // Update UI: change the button text to 'Hired'
-            setJobs(jobs.map(job => {
-                if (job._id === jobId) {
-                    return { ...job, isHired: true };
-                }
-                return job;
-            }));
-
+            // Update the job's state to reflect the hire
+            setJobs(jobs.map(job =>
+                (job._id === jobId ? { ...job, hiredBy: [...job.hiredBy, user._id] } : job)
+            ));
             toast.success(resData.message || 'Email for Hiring sent to the Person');
         } catch (err) {
             console.error(err.message || 'Failed to hire the Person');
@@ -165,6 +161,11 @@ export default function JobProfile() {
                     {/* If any jobs found related to specific job Profile */}
                     {jobs && jobs.length > 0 &&
                         jobs.map(job => {
+                            let isHired = false;
+                            if (isAuthenticated) {
+                                isHired = job.hiredBy.includes(user._id);
+                            }
+
                             return (
                                 <div key={job._id} className="card w-3/4 h-96 lg:card-side bg-gray-800 shadow-xl mx-5 my-8">
                                     <figure className='h-full w-1/2'><img src={`http://localhost:8080/uploads/images/${job.avatar}`} alt="Album" /></figure>
@@ -193,9 +194,13 @@ export default function JobProfile() {
                                                     <button onClick={() => { handleJobDelete(job._id) }}><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/material-rounded/24/FA5252/trash.png" alt="Delete_Icon" /></button>
                                                 </>)
                                             }
-                                            <button className="btn btn-primary" disabled={!isAuthenticated || job.isHired} onClick={() => handleJobHire(job._id)}>
-                                                {job.isHired ? 'Hiring...' : 'Hire!'}
-                                            </button>
+                                            {isAuthenticated && (
+                                                isHired ? (
+                                                    <button className="btn btn-success cursor-default">Hired!</button>
+                                                ) : (
+                                                    <button className="btn btn-primary" onClick={() => handleJobHire(job._id)}>Hire!</button>
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 </div>

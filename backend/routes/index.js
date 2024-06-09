@@ -47,13 +47,13 @@ router.post('/hire/:jobId', async function (req, res) {
             return res.status(404).json({ message: 'Job or User not found' });
         }
 
-        // Update the job's isHired field
-        job.isHired = true;
+        // Add the user's ID to the job's hiredBy array
+        job.hiredBy.push(user._id);
         await job.save();
 
-        // Add the job to the user's hiredJobs array
+        // Add the job's ID to the user's hiredJobs array
         user.hiredJobs.push(job._id);
-        await user.save();
+        await user.save();  
 
 
         // Send email

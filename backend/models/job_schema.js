@@ -14,7 +14,7 @@ const jobSchema = new Schema({
     postalcode: { type: Number },
     about: { type: String, },
     avatar: { type: String, required: true, },
-    isHired: { type: Boolean, default: false }, // to make changes in the frontend
+    hiredBy: [{ type: Schema.Types.ObjectId, ref: 'User' }] // array of user IDs who hired this job
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
