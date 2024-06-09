@@ -34,6 +34,73 @@ router.get('/hire/:role', async function (req, res) {
     });
 });
 
+//* Job Hiring
+router.post('/hire/:jobId', async function (req, res) {
+    const jobId = req.params.jobId;
+    const userId = req.body.userId;
+
+    try {
+        const job = await Job.findById(jobId);
+        const user = await User.findById(userId);
+
+        if (!job || !user) {
+            return res.status(404).json({ message: 'Job or User not found' });
+        }
+
+        // Update the job's isHired field
+        job.isHired = true;
+        await job.save();
+
+        // Add the job to the user's hiredJobs array
+        user.hiredJobs.push(job._id);
+        await user.save();
+
+
+        // Send email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // email service
+            auth: {
+                user: 'resetpass905@gmail.com', // email service id
+                pass: 'afkrgeiwdsuhecdl', // email service Password(App Password)
+            },
+            host: 'smtp.gmail.com',
+            secure: false
+        });
+
+        const mailOptions = {
+            to: job.email,
+            from: 'resetpass905@gmail.com',
+            subject: 'Hiring! Request',
+            html: ` 
+            <p>Congratulations! Dear, <Strong>${job.fullname}</Strong></p>,
+
+    <p>You have received a request form <strong>${user.name}</strong> to hire you for the position of <strong>${job.jobRole}</strong>.</p>
+    
+    <p>You can reply to this Mail for further assistance.</p>
+    
+    <p>If you do not want to work for <strong>${user.name}</strong>, kindly ignore this email or contact support if you have any questions.</p>
+
+    <p>Thank you, </p>
+    <p>Best regards,</p>
+    <p>The AskService Team</p>
+    
+    <p>For support, contact us at supportService@gmail.com</p>`
+        };
+
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error('Error sending email for hiring Process: ', err);
+                return res.status(500).send({ message: 'Error sending email for hiring Process' });
+            }
+            return res.status(200).send({ message: 'Email for Hiring Process sent to the Person' });
+        });
+
+    } catch (err) {
+        console.error('Error processing Hiring Process request: ', err);
+        return res.status(500).send({ message: 'Error processing Hiring Process request' });
+    }
+})
+
 
 //* --- User ---
 

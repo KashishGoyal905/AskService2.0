@@ -68,9 +68,40 @@ export default function JobProfile() {
     }, [params.jobProfile]);
 
     // function for handling Hire event
-    async function handleJobHire() {
+    async function handleJobHire(jobId) {
+        if (!isAuthenticated || !user) {
+            toast.error('You need to be logged in to hire.');
+            return;
+        }
 
-        toast.success('Email Sent to the Person');
+        try {
+            const response = await fetch(`http://localhost:8080/hire/${jobId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: user._id })
+            });
+
+            const resData = await response.json();
+            if (!response.ok) {
+                throw new Error(resData.message || 'Failed to hire the Person');
+            }
+
+            // Update UI: change the button text to 'Hired'
+            setJobs(jobs.map(job => {
+                if (job._id === jobId) {
+                    return { ...job, isHired: true };
+                }
+                return job;
+            }));
+
+            toast.success(resData.message || 'Email for Hiring sent to the Person');
+        } catch (err) {
+            console.error(err.message || 'Failed to hire the Person');
+            toast.error(err.message || 'Failed to hire the Person');
+        }
+
     }
 
     // Funciton to handle job deletion
@@ -162,7 +193,9 @@ export default function JobProfile() {
                                                     <button onClick={() => { handleJobDelete(job._id) }}><img style={{ width: 28, height: 28, display: "inline-block", marginRight: 8, marginTop: 10 }} src="https://img.icons8.com/material-rounded/24/FA5252/trash.png" alt="Delete_Icon" /></button>
                                                 </>)
                                             }
-                                            <button className="btn btn-primary" disabled={!isAuthenticated} onClick={handleJobHire}>Hire!</button>
+                                            <button className="btn btn-primary" disabled={!isAuthenticated || job.isHired} onClick={() => handleJobHire(job._id)}>
+                                                {job.isHired ? 'Hiring...' : 'Hire!'}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

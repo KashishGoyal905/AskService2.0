@@ -10,7 +10,7 @@ const userSchema = new Schema({
     image: { type: String },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
-    
+    hiredJobs: [{ type: Schema.Types.ObjectId, ref: 'Job' }] // To store all the jobs cards which user is hiring.
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
