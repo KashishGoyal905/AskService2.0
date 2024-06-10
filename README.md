@@ -5,7 +5,8 @@ To run this Project:
   3. Go inside the frontend directory using `cd frontend`.
   4. Run `npm i`
   5. Then, run `npm start`
-  6. Keep it running.
+  6. Keep it running...
+  7. Then open any browser and visit the `http://localhost:3000/`
 
  
   1. --- Backend --->
@@ -13,5 +14,5 @@ To run this Project:
   3. Go inside the backend directory using `cd backend`.
   4. Run `npm i`
   5. Then, run `npm start`
-  6. Keep it running.
+  6. Keep it running...
 -----------------------------
