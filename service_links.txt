@@ -1,0 +1,2 @@
+backend  : { https://askservice2-0.onrender.com }
+frontend : { https://askservice2-0-1.onrender.com/ }

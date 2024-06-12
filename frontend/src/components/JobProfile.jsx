@@ -29,7 +29,7 @@ export default function JobProfile() {
         console.log('Updated Job Form Details: ', data);
 
         try {
-            const response = await fetch(`http://localhost:8080/jobs/${id}`, {
+            const response = await fetch(`https://askservice2-0.onrender.com/jobs/${id}`, {
                 method: 'POST',
                 body: fd,
             });
@@ -57,7 +57,7 @@ export default function JobProfile() {
         async function fetchEvents() {
             setIsLoading(true);
             // Fetching the specific jobs form the db
-            const response = await fetch(`http://localhost:8080/hire/${params.jobProfile}`);
+            const response = await fetch(`https://askservice2-0.onrender.com/hire/${params.jobProfile}`);
             // converting the jobs recvieved from the db to json format
             const resData = await response.json();
             setJobs(resData.jobs);
@@ -75,7 +75,7 @@ export default function JobProfile() {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/hire/${jobId}`, {
+            const response = await fetch(`https://askservice2-0.onrender.com/hire/${jobId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function JobProfile() {
         if (!window.confirm("Are you sure you want to delete this job?")) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/jobs/${jobId}`, {
+            const response = await fetch(`https://askservice2-0.onrender.com/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ export default function JobProfile() {
 
                             return (
                                 <div key={job._id} className="card w-3/4 h-96 lg:card-side bg-gray-800 shadow-xl mx-5 my-8">
-                                    <figure className='h-full w-1/2'><img src={`http://localhost:8080/uploads/images/${job.avatar}`} alt="Album" /></figure>
+                                    <figure className='h-full w-1/2'><img src={`https://askservice2-0.onrender.com/uploads/images/${job.avatar}`} alt="Album" /></figure>
                                     <div className="card-body h-full w-1/2">
                                         <h1 className="text-right font-bold text-2xl mt-2">{job.fullname}</h1>
                                         <h2 className="text-xl">

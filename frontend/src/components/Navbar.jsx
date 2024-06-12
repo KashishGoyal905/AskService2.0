@@ -22,7 +22,7 @@ export default function Navbar() {
                         {isAuthenticated && user && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">
                             <div className="avatar online">
                                 <div className="w-8 rounded-full">
-                                    {user.image ? <img src={`http://localhost:8080/uploads/images/${user.image}`} alt={user.name} /> :
+                                    {user.image ? <img src={`https://askservice2-0.onrender.com/uploads/images/${user.image}`} alt={user.name} /> :
                                         <img src={user1} alt='Profile' />}
                                 </div>
                             </div>

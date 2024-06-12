@@ -21,7 +21,7 @@ export default function ForgotPassword() {
 
         try {
             // Sending req to the backend with eamil
-            const response = await fetch('http://localhost:8080/forgot-password', {
+            const response = await fetch('https://askservice2-0.onrender.com/forgot-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

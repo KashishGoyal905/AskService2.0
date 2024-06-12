@@ -23,7 +23,7 @@ export default function Login() {
 
         try {
             // Sending a POST request to the backend with Login form data
-            const response = await fetch('http://localhost:8080/login', {
+            const response = await fetch('https://askservice2-0.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
