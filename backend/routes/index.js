@@ -325,7 +325,7 @@ router.post('/forgot-password', async (req, res) => {
             We received a request to reset the password for your account.
             
             To reset your password, please click the link below or copy and paste it into your browser:
-            https://askservicea2z.web.app/reset-password/${token}
+            https://askservice2-0-1-sqgv.onrender.com/reset-password/${token}
             
             If you did not request a password reset, please ignore this email or contact support if you have any questions.
             
