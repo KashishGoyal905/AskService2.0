@@ -57,7 +57,7 @@ export default function JobProfile() {
         async function fetchEvents() {
             setIsLoading(true);
             // Fetching the specific jobs form the db
-            const response = await fetch(`http://localhost:8080/hire/${params.jobProfile}`);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/hire/${params.jobProfile}`);
             // converting the jobs recvieved from the db to json format
             const resData = await response.json();
             setJobs(resData.jobs);
