@@ -2,7 +2,7 @@ const express = require("express"); //requiring
 const app = express(); // initializing the instance of express application
 const path = require("path");
 const db = require('./config/mongoose');
-
+const PORT=   process.env.PORT||8080;
 app.use(express.urlencoded({ extended: true })); // helps to parse the data
 
 
@@ -24,7 +24,8 @@ app.use('/', require('./routes'));  // routes
 
 
 //listening to the server
-app.listen(8080, function (req, res, err) {
+app.listen(PORT, function (req, res, err) {
+    console.log(`Server started at ${PORT}`);
     if (err) {
         console.log(err);
         return(err);
