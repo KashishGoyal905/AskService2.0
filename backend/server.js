@@ -28,11 +28,10 @@ app.use('/', require('./routes'));  // routes
 
 //listening to the server
 app.listen(PORT, function (req, res, err) {
-    console.log(`Server started at ${PORT}`);
     if (err) {
         console.log(err);
-        return(err);
+        return (err);
     } else {
-        console.log("server is running on port no:8080");
+        console.log(`Server started at ${PORT}`);
     }
 });
