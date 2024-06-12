@@ -20,7 +20,7 @@ export async function applyJobAction({ request }) {
     // console.log('Job Application:', jobApplication);
 
     // // Example of sending data to the backend
-    // const response = await fetch('http://localhost:8080/applyjob', {
+    // const response = await fetch('process.env.REACT_APP_BACKEND_URL/applyjob', {
     //     method: 'POST',
     //     headers: {
     //         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export async function applyJobAction({ request }) {
 
     try {
         // Sending a req to tha backend with form data.
-        const response = await fetch('http://localhost:8080/applyjob', {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/applyjob', {
             method: 'POST',
             body: formData, // FormData automatically sets the correct headers
             headers: {
@@ -82,7 +82,7 @@ export async function signUpAction({ request }) {
 
     try {
         // Sending a POST request to the backend with signup form data
-        const response = await fetch('http://localhost:8080/register', {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export async function signUpAction({ request }) {
     // console.log('FormData entries:', [...formData.entries()]);
 
     // // Note: No need to manually create an object; you can use FormData directly
-    // const response = await fetch('http://localhost:8080/register', {
+    // const response = await fetch('process.env.REACT_APP_BACKEND_URL/register', {
     //     method: 'POST',
     //     body: formData, // FormData automatically sets the correct headers
     // });
@@ -135,7 +135,7 @@ export async function loginAction({ request }) {
 
     try {
         // Sending a POST request to the backend with Login form data
-        const response = await fetch('http://localhost:8080/login', {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

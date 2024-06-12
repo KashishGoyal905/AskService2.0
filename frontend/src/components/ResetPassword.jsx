@@ -30,7 +30,7 @@ export default function ResetPassword() {
 
 
         try {
-            const response = await fetch(`http://localhost:8080/reset-password/${token}`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/reset-password/${token}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

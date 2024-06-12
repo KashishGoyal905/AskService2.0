@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'); // importing mongoose library.
-
+require('dotenv').config(); // Load environment variables from .env file
 // establishing a connection to the mongoDB database.
-mongoose.connect(`mongodb+srv://kashishgoyal961:iNMfqzS2bH5ptIKs@askservice.vnaa8ns.mongodb.net/test`);
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@askservice.vnaa8ns.mongodb.net/${process.env.DB_NAME}`);
 // mongoose.connect(`mongodb://0.0.0.0:27017/test`);
 
 const db = mongoose.connection; // storing a reference of the database connection

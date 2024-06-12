@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_USER": "kashishgoyal961",
+        "DB_PASSWORD": "iNMfqzS2bH5ptIKs",
+        "DB_NAME": "test",
+        "JWT_SECRET_KEY": "tokenSecret",
+        "NODEMAILER_EMAIL_PASSWORD": "afkrgeiwdsuhecdl"
+    }
+}

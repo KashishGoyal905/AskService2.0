@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
 
         //token might be invalid
         // it will have the first argument which we store as a payload when we generated token
-        const decodedToken = jwt.verify(token, 'tokenSecret');
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
         // adding an object to the req of user data
         require.userData = { userId: decodedToken.userId };
         // letting it pass to the next route
