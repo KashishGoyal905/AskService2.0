@@ -23,7 +23,7 @@ export default function Login() {
 
         try {
             // Sending a POST request to the backend with Login form data
-            const response = await fetch('https://askservice2-0.onrender.com/login', {
+            const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

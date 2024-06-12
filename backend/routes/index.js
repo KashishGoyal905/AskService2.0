@@ -24,6 +24,12 @@ const crypto = require('crypto');
 // multer file upload
 const fileUpload = require('../middleware/file-upload');
 
+
+// route for debuging
+router.get('/', (req, res) => {
+    res.send('Welcome to AskService');
+});
+
 // route for the specific jobs
 router.get('/hire/:role', async function (req, res) {
     const role = req.params.role;    // taking the value of role from params
@@ -53,7 +59,7 @@ router.post('/hire/:jobId', async function (req, res) {
 
         // Add the job's ID to the user's hiredJobs array
         user.hiredJobs.push(job._id);
-        await user.save();  
+        await user.save();
 
 
         // Send email
@@ -61,7 +67,7 @@ router.post('/hire/:jobId', async function (req, res) {
             service: 'gmail', // email service
             auth: {
                 user: 'resetpass905@gmail.com', // email service id
-                pass: 'afkrgeiwdsuhecdl', // email service Password(App Password)
+                pass: process.env.NODEMAILER_EMAIL_PASSWORD, // email service Password(App Password)
             },
             host: 'smtp.gmail.com',
             secure: false
@@ -99,8 +105,7 @@ router.post('/hire/:jobId', async function (req, res) {
         console.error('Error processing Hiring Process request: ', err);
         return res.status(500).send({ message: 'Error processing Hiring Process request' });
     }
-})
-
+});
 
 //* --- User ---
 
@@ -172,7 +177,7 @@ router.post('/register', async function (req, res) {
 
         // let token;
         // token = jwt.sign(
-        //     { userId: savedUser._id, email: savedUser.email }, 'tokenSecret', { expiresIn: '1h' }
+        //     { userId: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         // );
         // console.log('Token1: ', token);
 
@@ -212,7 +217,7 @@ router.post('/login', async (req, res) => {
 
         let token;
         token = jwt.sign(
-            { userId: user._id, email: user.email }, 'tokenSecret', { expiresIn: '1h' }
+            { userId: user._id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
 
         return res.status(200).json({ message: 'User logged in successfully', user: user, token: token });
@@ -305,7 +310,7 @@ router.post('/forgot-password', async (req, res) => {
             service: 'gmail', // email service
             auth: {
                 user: 'resetpass905@gmail.com', // email service id
-                pass: 'afkrgeiwdsuhecdl', // email service Password(App Password)
+                pass: process.env.NODEMAILER_EMAIL_PASSWORD, // email service Password(App Password)
             },
             host: 'smtp.gmail.com',
             secure: false
@@ -320,7 +325,7 @@ router.post('/forgot-password', async (req, res) => {
             We received a request to reset the password for your account.
             
             To reset your password, please click the link below or copy and paste it into your browser:
-            https://askservice2-0-1.onrender.com//reset-password/${token}
+            https://askservicea2z.web.app/reset-password/${token}
             
             If you did not request a password reset, please ignore this email or contact support if you have any questions.
             
