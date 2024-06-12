@@ -27,7 +27,7 @@ app.use('/', require('./routes'));  // routes
 app.listen(8080, function (req, res, err) {
     if (err) {
         console.log(err);
-        return;
+        return(err);
     } else {
         console.log("server is running on port no:8080");
     }
