@@ -267,7 +267,7 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
     }
 
     if (req.file) {
-        user.image = req.file.filename;
+        user.image = req.file.path;
     }
 
     // Debugging
@@ -437,6 +437,7 @@ router.post('/jobs/:jobId', fileUpload.single('avatar'), async (req, res) => {
         // Deleting prevous job card avatar
         if (req.file) {
             // path of the image
+            // TODO: Have to edit the code for cloudinary
             const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
             // deleting previous image
             fs.unlink(imagePath, err => {
@@ -447,7 +448,7 @@ router.post('/jobs/:jobId', fileUpload.single('avatar'), async (req, res) => {
                 }
             });
             // Assigning||Adding a new one
-            job.avatar = req.file.filename;
+            job.avatar = req.file.path;
         }
 
         // Debugging
@@ -493,7 +494,7 @@ router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function 
         state,
         postalcode,
         about,
-        avatar: req.file ? req.file.filename : null, // Save the filename
+        avatar: req.file ? req.file.path : null, // Save the filename
     });
 
     console.log(jobApplication);

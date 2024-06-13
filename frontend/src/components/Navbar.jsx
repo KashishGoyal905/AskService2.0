@@ -22,7 +22,7 @@ export default function Navbar() {
                         {isAuthenticated && user && <li><Link to={`/profile/${user._id}`} className="mr-2 hover:bg-primary hover:text-primary-content">
                             <div className="avatar online">
                                 <div className="w-8 rounded-full">
-                                    {user.image ? <img src={`${process.env.REACT_APP_BACKEND_URL}/uploads/images/${user.image}`} alt={user.name} /> :
+                                    {user.image ? <img src={user.image} alt={user.name} /> :
                                         <img src={user1} alt='Profile' />}
                                 </div>
                             </div>

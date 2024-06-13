@@ -168,7 +168,7 @@ export default function JobProfile() {
 
                             return (
                                 <div key={job._id} className="card w-3/4 h-96 lg:card-side bg-gray-800 shadow-xl mx-5 my-8">
-                                    <figure className='h-full w-1/2'><img src={`${process.env.REACT_APP_BACKEND_URL}/uploads/images/${job.avatar}`} alt="Album" /></figure>
+                                    <figure className='h-full w-1/2'><img src={job.avatar} alt="Album" /></figure>
                                     <div className="card-body h-full w-1/2">
                                         <h1 className="text-right font-bold text-2xl mt-2">{job.fullname}</h1>
                                         <h2 className="text-xl">
