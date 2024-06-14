@@ -13,6 +13,8 @@ export default function Profile() {
     const [myUser, setMyUser] = useState(user);
     // Navigate
     const navigate = useNavigate();
+    // while the profile is updating...
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleUpdate = async (event) => {
         event.preventDefault();
@@ -22,6 +24,7 @@ export default function Profile() {
         console.log('Updated User Form Details: ', data);
 
         try {
+            setIsLoading(true);
             // Note: No need to manually create an object | you can use FormData directly
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/${user._id}`, {
                 method: 'POST',
@@ -31,12 +34,14 @@ export default function Profile() {
             const resData = await response.json();
 
             if (!response.ok) {
+                setIsLoading(false);
                 throw new Error(resData.message || 'Failed to update the user');
             }
 
             setMyUser(resData.user);
             updateFun(resData.user);
             event.target.reset();
+            setIsLoading(false);
             return;
         } catch (err) {
             console.log('Failed to Update the Profile: ', err.message);
@@ -52,6 +57,7 @@ export default function Profile() {
         if (!window.confirm("Are you sure you want to delete your account?")) return;
 
         try {
+            setIsLoading(true);
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/${userId}`, {
                 method: 'DELETE',
                 headers: {
@@ -62,11 +68,13 @@ export default function Profile() {
 
             if (!response.ok) {
                 console.log(resData.message || 'Failed to delete User Account');
+                setIsLoading(false);
                 throw new Error(resData.message || 'Failed to delete User Account');
             }
 
             logout();
             navigate('/');
+            setIsLoading(false);
             toast.success(resData.message || 'User Account deleted successfully');
         } catch (err) {
             console.log('Failed to delete User Account: ', err.message);
@@ -78,6 +86,16 @@ export default function Profile() {
         <>
             {!isAuthenticated && <Link to='/'>Home</Link>}
             {isAuthenticated && <div className='mt-10' >
+                {/* While the data is being fetched */}
+                {isLoading &&
+                    <div className="loading-overlay">
+                        <p className="relative">
+                            {/* {console.log("Clicking...")} */}
+                            <span className="loading loading-dots loading-lg text-primary"></span>
+                            {/* <progress className="progress progress-primary w-56"></progress> */}
+                        </p>
+                    </div>
+                }
                 <h1 className='text-3xl text-center text-bold'>{myUser.name}'s Profile</h1>
                 <hr className="mt-4" />
                 <div className='flex flex-row flex-wrap justify-around mt-10'>

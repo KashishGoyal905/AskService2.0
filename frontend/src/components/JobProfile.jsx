@@ -75,6 +75,7 @@ export default function JobProfile() {
         }
 
         try {
+            setIsLoading(true);
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/hire/${jobId}`, {
                 method: 'POST',
                 headers: {
@@ -85,6 +86,7 @@ export default function JobProfile() {
 
             const resData = await response.json();
             if (!response.ok) {
+                setIsLoading(false);
                 throw new Error(resData.message || 'Failed to hire the Person');
             }
 
@@ -92,6 +94,7 @@ export default function JobProfile() {
             setJobs(jobs.map(job =>
                 (job._id === jobId ? { ...job, hiredBy: [...job.hiredBy, user._id] } : job)
             ));
+            setIsLoading(false);
             toast.success(resData.message || 'Email for Hiring sent to the Person');
         } catch (err) {
             console.error(err.message || 'Failed to hire the Person');
@@ -137,16 +140,18 @@ export default function JobProfile() {
                 <div className="flex flex-col flex-wrap space-around place-content-center hire">
                     {/* While the data is being fetched */}
                     {isLoading &&
-                        <div className="h-96">
-                            <p className="relative top-40">
+                        <div className="loading-overlay">
+                            <p className="relative">
+                                {/* {console.log("Clicking...")} */}
                                 <span className="loading loading-dots loading-lg text-primary"></span>
+                                {/* <progress className="progress progress-primary w-56"></progress> */}
                             </p>
                         </div>
                     }
 
                     {/* If there is no jobs related to specific job Profile */}
                     {jobs && jobs.length === 0 &&
-                        <div className="card w-2/4 h-80 lg:card-side bg-gray-800 shadow-xl mx-5 my-8">
+                        <div className={`${isLoading ? 'blur-background' : ''} card w-2/4 h-80 lg:card-side bg-gray-800 shadow-xl mx-5 my-8`}>
                             <div className="card-body h-1/2 w-1/2">
                                 <h2 className="text-center text-2xl mt-2">No Job Profile exists for - {params.jobProfile}</h2>
                                 <div className="card-actions justify-center m-8">
