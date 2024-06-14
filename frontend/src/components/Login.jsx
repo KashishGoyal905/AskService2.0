@@ -11,9 +11,13 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const { login } = useContext(authContext);
     const navigate = useNavigate();
+    // while the user is being authenticated
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         // Extracting data from the Form using state
         const user = {
             email: email,
@@ -36,11 +40,12 @@ export default function Login() {
             // If any error recieved from the backend || it will tirgger the catch block present below
             if (!response.ok) {
                 console.log(resData.message || 'Failed to Login');
+                setIsLoading(false);
                 throw new Error(resData.message || 'Failed to Login');
             }
-            
-            login(resData.token, resData.user);
 
+            login(resData.token, resData.user);
+            setIsLoading(false);
         } catch (err) {
             console.log('Failed to Login: ', err.message);
             toast.error(err.message || 'Failed to Login');
@@ -53,8 +58,17 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
-            <div className="flex flex-col justify-center py-12 px-6 lg:px-8 w-full max-w-md mx-auto">
+
+        <div className="relative min-h-screen bg-gray-100 flex">
+            {isLoading && (
+                <div className="loading-overlay">
+                    <p className="relative">
+                        <span className="loading loading-dots loading-lg text-primary"></span>
+                    </p>
+                </div>
+            )}
+
+            <div className={`${isLoading ? 'blur-background' : ''} flex flex-col justify-center py-12 px-6 lg:px-8 w-full max-w-md mx-auto`}>
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <Link to="/"><img
                         className="mx-auto h-12 w-auto"
@@ -186,6 +200,6 @@ export default function Login() {
                     alt=""
                 />
             </div>
-        </div>
+        </div >
     )
 }

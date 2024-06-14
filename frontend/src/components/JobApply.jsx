@@ -4,6 +4,7 @@ import authContext from '../context/AuthContext';
 
 export default function JobApply() {
     const { isAuthenticated, user } = useContext(authContext);
+
     return (
         <>
             <div className='mt-5'>

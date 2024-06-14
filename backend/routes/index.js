@@ -119,21 +119,21 @@ router.delete('/profile/:userId/', async (req, res) => {
             return res.status(404).send({ message: 'User not found' });
         }
 
-        // Deleting image
-        const imagePath = path.join(__dirname, '../uploads/images', user.image);
-        fs.unlink(imagePath, err => {
-            if (err) {
-                console.log('Error in deleting previous user avatar: ', err);
-            } else {
-                console.log('Previous user image deleted successfully');
-            }
-        });
+        // TODO: has to rewirte it acc to Cloudinary | eleting image
+        // const imagePath = path.join(__dirname, '../uploads/images', user.image);
+        // fs.unlink(imagePath, err => {
+        //     if (err) {
+        //         console.log('Error in deleting previous user avatar: ', err);
+        //     } else {
+        //         console.log('Previous user image deleted successfully');
+        //     }
+        // });
 
         // finding and deleting directly
         await User.findByIdAndDelete(userId);
         return res.status(200).send({ message: 'User Account deleted successfully' });
     } catch (err) {
-        console.log('Failed to user account | Backend ', err);
+        console.log('Failed to delete user account | Backend ', err);
         res.status(500).json({ message: 'Failed to user account', err });
     }
 })
