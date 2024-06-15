@@ -8,6 +8,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true, },
     password: { type: String },
     image: { type: String },
+    imagePublicId: { type: String }, // Store Cloudinary public ID
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     hiredJobs: [{ type: Schema.Types.ObjectId, ref: 'Job' }] // To store all the jobs cards which user is hiring.
