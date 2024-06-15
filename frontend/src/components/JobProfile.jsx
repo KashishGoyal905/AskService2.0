@@ -29,6 +29,7 @@ export default function JobProfile() {
         console.log('Updated Job Form Details: ', data);
 
         try {
+            setIsLoading(true);
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/jobs/${id}`, {
                 method: 'POST',
                 body: fd,
@@ -37,12 +38,14 @@ export default function JobProfile() {
             const resData = await response.json();
 
             if (!response.ok) {
+                setIsLoading(false);
                 throw new Error(resData.message || 'Failed to update job application');
             }
 
             const updatedJob = resData.job;
             setJobs(jobs.map(job => (job._id === id ? updatedJob : job)));
             toast.success(resData.message || 'Job updated successfully');
+            setIsLoading(false);
             document.getElementById('my_modal_1').close();
         } catch (err) {
             document.getElementById('my_modal_1').close();
@@ -109,6 +112,7 @@ export default function JobProfile() {
         if (!window.confirm("Are you sure you want to delete this job?")) return;
 
         try {
+            setIsLoading(true);
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
@@ -118,6 +122,7 @@ export default function JobProfile() {
             const resData = await response.json();
 
             if (!response.ok) {
+                setIsLoading(false);
                 console.log(resData.message || 'Failed to delete job application');
                 throw new Error(resData.message || 'Failed to delete job application');
             }
@@ -125,6 +130,7 @@ export default function JobProfile() {
             // To re-render the component
             setJobs(jobs.filter(job => job._id !== jobId));
             toast.success(resData.message || 'Job deleted successfully');
+            setIsLoading(false);
         }
         catch (err) {
             console.log("Failed to delete job:", err.message);

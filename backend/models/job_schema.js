@@ -14,6 +14,7 @@ const jobSchema = new Schema({
     postalcode: { type: Number },
     about: { type: String, },
     avatar: { type: String, required: true, },
+    avatarPublicId: { type: String }, // Store Cloudinary public ID
     hiredBy: [{ type: Schema.Types.ObjectId, ref: 'User' }] // array of user IDs who hired this job
 }, { timestamps: true }); // to add createdAt and updatedAt
 

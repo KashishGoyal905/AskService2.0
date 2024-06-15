@@ -17,6 +17,9 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+// To delete images
+const cloudinary = require('cloudinary').v2;
+
 // Import user routes
 // const userRoutes = require('./users');
 // router.use('/user', userRoutes);
@@ -109,35 +112,6 @@ router.post('/hire/:jobId', async function (req, res) {
 
 //* --- User ---
 
-//* DELETE User Profile
-router.delete('/profile/:userId/', async (req, res) => {
-    const userId = req.params.userId;
-
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-
-        // TODO: has to rewirte it acc to Cloudinary | eleting image
-        // const imagePath = path.join(__dirname, '../uploads/images', user.image);
-        // fs.unlink(imagePath, err => {
-        //     if (err) {
-        //         console.log('Error in deleting previous user avatar: ', err);
-        //     } else {
-        //         console.log('Previous user image deleted successfully');
-        //     }
-        // });
-
-        // finding and deleting directly
-        await User.findByIdAndDelete(userId);
-        return res.status(200).send({ message: 'User Account deleted successfully' });
-    } catch (err) {
-        console.log('Failed to delete user account | Backend ', err);
-        res.status(500).json({ message: 'Failed to user account', err });
-    }
-})
-
 //* SIGNUP
 router.post('/register', async function (req, res) {
     // Debugging
@@ -227,6 +201,36 @@ router.post('/login', async (req, res) => {
     }
 });
 
+//* DELETE User Profile
+router.delete('/profile/:userId/', async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        // Delete image from Cloudinary
+        if (user.image && user.imagePublicId) {
+            cloudinary.uploader.destroy(user.imagePublicId, (error, result) => {
+                if (error) {
+                    console.log('Error deleting image from Cloudinary:', error);
+                } else {
+                    console.log('Image deleted from Cloudinary:', result);
+                }
+            });
+        }
+
+        // finding and deleting directly
+        await User.findByIdAndDelete(userId);
+        return res.status(200).send({ message: 'User Account deleted successfully' });
+    } catch (err) {
+        console.log('Failed to delete user account | Backend ', err);
+        res.status(500).json({ message: 'Failed to user account', err });
+    }
+})
+
 //* UPDATE User Profile
 router.post('/profile/:id', fileUpload.single('image'), async function (req, res) {
     // Finding the user 
@@ -256,18 +260,31 @@ router.post('/profile/:id', fileUpload.single('image'), async function (req, res
     // If it exists | because there could be the case when user was updating it for the first time.
     if (req.file && user.image) {
         // deleting previous image
-        const imagePath = path.join(__dirname, '../uploads/images', user.image);
-        fs.unlink(imagePath, err => {
-            if (err) {
-                console.log('Error in deleting previous Profile Pic: ', err);
-            } else {
-                console.log('Previous Profile Pic deleted successfully');
-            }
-        });
+        // const imagePath = path.join(__dirname, '../uploads/images', user.image);
+        // fs.unlink(imagePath, err => {
+        //     if (err) {
+        //         console.log('Error in deleting previous Profile Pic: ', err);
+        //     } else {
+        //         console.log('Previous Profile Pic deleted successfully');
+        //     }
+        // });
+
+        // Delete previous image from Cloudinary if it exists
+        if (user.imagePublicId) {
+            cloudinary.uploader.destroy(user.imagePublicId, (error, result) => {
+                if (error) {
+                    console.log('Error in deleting previous Profile Pic from Cloudinary: ', error);
+                } else {
+                    console.log('Previous Profile Pic deleted successfully from Cloudinary: ', result);
+                }
+            });
+        }
     }
 
     if (req.file) {
+        // Update with new image information from Cloudinary
         user.image = req.file.path;
+        user.imagePublicId = req.file.filename;
     }
 
     // Debugging
@@ -437,18 +454,30 @@ router.post('/jobs/:jobId', fileUpload.single('avatar'), async (req, res) => {
         // Deleting prevous job card avatar
         if (req.file) {
             // path of the image
-            // TODO: Have to edit the code for cloudinary
-            const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
-            // deleting previous image
-            fs.unlink(imagePath, err => {
-                if (err) {
-                    console.log('Error in deleting previous Job Card avatar: ', err);
-                } else {
-                    console.log('Previous avatar deleted successfully');
-                }
-            });
+            // const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
+            // // deleting previous image
+            // fs.unlink(imagePath, err => {
+            //     if (err) {
+            //         console.log('Error in deleting previous Job Card avatar: ', err);
+            //     } else {
+            //         console.log('Previous avatar deleted successfully');
+            //     }
+            // });
+
+            // Delete image from Cloudinary
+            if (job.avatar && job.avatarPublicId) {
+                cloudinary.uploader.destroy(job.avatarPublicId, (error, result) => {
+                    if (error) {
+                        console.log('Error deleting Job avatar from Cloudinary:', error);
+                    } else {
+                        console.log('Job avatar deleted from Cloudinary:', result);
+                    }
+                });
+            }
+
             // Assigning||Adding a new one
             job.avatar = req.file.path;
+            job.avatarPublicId = req.file.filename;
         }
 
         // Debugging
@@ -495,6 +524,7 @@ router.post('/applyjob', checkAuth, fileUpload.single('avatar'), async function 
         postalcode,
         about,
         avatar: req.file ? req.file.path : null, // Save the filename
+        avatarPublicId: req.file ? req.file.filename : undefined // save the unique public id
     });
 
     console.log(jobApplication);
@@ -522,15 +552,26 @@ router.delete('/jobs/:jobId', async function (req, res) {
             return res.status(404).json({ message: 'Failed to find job application' });
         }
 
-        // Deleting image
-        const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
-        fs.unlink(imagePath, err => {
-            if (err) {
-                console.log('Error in deleting previous Job Card avatar: ', err);
-            } else {
-                console.log('Previous avatar deleted successfully');
-            }
-        });
+        // Deleting image with multer
+        // const imagePath = path.join(__dirname, '../uploads/images', job.avatar);
+        // fs.unlink(imagePath, err => {
+        //     if (err) {
+        //         console.log('Error in deleting previous Job Card avatar: ', err);
+        //     } else {
+        //         console.log('Previous avatar deleted successfully');
+        //     }
+        // });
+
+        // Delete image from Cloudinary
+        if (job.avatar && job.avatarPublicId) {
+            cloudinary.uploader.destroy(job.avatarPublicId, (error, result) => {
+                if (error) {
+                    console.log('Error deleting Job avatar from Cloudinary:', error);
+                } else {
+                    console.log('Job avatar deleted from Cloudinary:', result);
+                }
+            });
+        }
 
         // Deleting Job Card...
         await Job.findByIdAndDelete(jobId);
