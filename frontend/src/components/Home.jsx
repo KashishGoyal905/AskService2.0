@@ -11,11 +11,11 @@ import Worker from '../Images/Worker.jpg';
 export default function Home() {
     return (
         <>
-            <div className='flex home'>
-                <div className='w-2/5 home_info'>
-                    <h1 className='text-center mt-10 text-3xl text-white'>Comfort delivered to your doorsteps</h1>
-                    <p className='text-center mt-7 text-xl'>One-step solution for all your household needs</p>
-                    <p className='text-center'>
+            <div className='flex flex-col lg:flex-row home'>
+                <div className='w-full lg:w-2/5 home_info'>
+                    <h1 className='text-center lg:mt-10 text-2xl lg:text-3xl text-white'>Comfort delivered to your doorsteps</h1>
+                    <p className='text-center mt-4 lg:mt-7 lg:text-xl'>One-step solution for all your household needs</p>
+                    <p className='text-center mb-8'>
                         <Link to='/hire'>
                             <button className="btn btn-outline mt-10 bg-primary text-primary-content hover:text-white">Get Started</button>
                         </Link>
