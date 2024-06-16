@@ -30,13 +30,26 @@ body {
 }
 
 .home_info {
-    margin-top: 8rem;
+    margin-top: 9rem;
+}
+
+@media (max-width: 640px) {
+    .home_info {
+        margin-top: 2rem;
+    }
 }
 
 .home button {
     width: 9rem;
     font-size: large;
     height: 3rem;
+}
+
+@media (max-width: 640px) {
+    .home button {
+        font-size: small;
+        width: 7rem;
+    }
 }
 
 .carousel div img {
