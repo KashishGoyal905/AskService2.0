@@ -108,7 +108,7 @@ export default function Profile() {
                             <p>{myUser.email}</p>
                         </div>
                     </div>
-                    <div>
+                    <div className="p-4 md:p-0">
                         <Form method="post" className="space-y-8 mt-6" encType="multipart/form-data" onSubmit={handleUpdate}>
                             <div className="bg-white shadow-md rounded-lg p-8">
                                 <h2 className="text-2xl font-bold mb-4 text-center">Update Details</h2>
@@ -117,11 +117,11 @@ export default function Profile() {
                                         <label className="block text-sm font-medium text-gray-700">Name</label>
                                         <input type="text" name="name" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                     </div>
-                                    <div>
+                                    <div className="col-span-2 md:col-span-1">
                                         <label className="block text-sm font-medium text-gray-700 mt-2">Email</label>
                                         <input type="email" name="email" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                     </div>
-                                    <div>
+                                    <div className="col-span-2 md:col-span-1">
                                         <label className="block text-sm font-medium text-gray-700 mt-2">Profile Picture</label>
                                         <input type="file" name="image" accept=".jpg,.png,.jpeg" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                     </div>
@@ -133,7 +133,7 @@ export default function Profile() {
                                 </div>
                             </div>
                         </Form>
-                        {isAuthenticated && <div className="mt-8 flex justify-center">
+                        {isAuthenticated && <div className="mt-8 mb-4 flex justify-center">
                             <button className="btn btn-outline btn-error" onClick={() => handleAccDelete(myUser._id)}>Delete Account</button>
                         </div>}
                     </div>
