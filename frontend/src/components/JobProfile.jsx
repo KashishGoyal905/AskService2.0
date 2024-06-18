@@ -138,6 +138,10 @@ export default function JobProfile() {
         }
     }
 
+    function handelUpdateCancel() {
+        document.getElementById('my_modal_1').close();
+    }
+
     return (
         <>
             <div className='mt-5'>
@@ -290,7 +294,10 @@ export default function JobProfile() {
                         </div>
                         <div className="p-2 flex justify-center md:justify-end">
                             {isAuthenticated
-                                ? <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update</button>
+                                ? <>
+                                    <button type="button" onClick={handelUpdateCancel} className="mr-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancel</button>
+                                    <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update</button>
+                                </>
                                 : <Link to='/login' className="btn btn-primary">Login to Update</Link>}
                         </div>
                     </Form>
